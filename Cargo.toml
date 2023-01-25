@@ -10,6 +10,8 @@ edition = "2021"
 
 [dependencies]
 rocket = "0.4.11"
+pear = "0.2.3"
+pear_codegen = "0.2.3"
 reqwest = "0.11.14"
 gcp-bigquery-client = "0.16.4"
 serde_derive = "1.0.152"
@@ -17,4 +19,3 @@ rocket_contrib = { version = "0.4.11", default-features = false, features = ["js
 
 [dependencies.rocket_codegen]
 version = "0.4.11"
-features = ["serve", "json"]
