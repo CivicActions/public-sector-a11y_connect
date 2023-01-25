@@ -1,0 +1,26 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: Rusty-A11y
+spec:
+  template:
+    spec:
+      containers:
+        - image: ghcr.io/CivicActions/Rusty-A11y:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GOOGLE_CLOUD_KEY
+              value: <YOUR_GOOGLE_CLOUD_KEY>
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
