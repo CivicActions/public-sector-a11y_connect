@@ -3,7 +3,7 @@ extern crate rocket;
 extern crate serde_json;
 extern crate tokio;
 
-use rocket::{post, request};
+use rocket::post;
 use serde_json::Value;
 
 #[post("/up", data = "<data>")]
