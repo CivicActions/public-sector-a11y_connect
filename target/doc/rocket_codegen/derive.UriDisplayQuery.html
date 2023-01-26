@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Derive for the `UriDisplay&lt;Query&gt;` trait."><meta name="keywords" content="rust, rustlang, rust-lang, UriDisplayQuery"><title>UriDisplayQuery in rocket_codegen - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-6d262342be62306e.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../static.files/light-5f7299aa2b503fb1.css"><link rel="stylesheet" disabled href="../static.files/dark-dfb18ef8114bb428.css"><link rel="stylesheet" disabled href="../static.files/ayu-4047a6aaddd3789d.css"><script id="default-settings" ></script><script src="../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="icon" href="https://rocket.rs/images/favicon.ico"></head><body class="rustdoc derive"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../rocket_codegen/index.html"><img src="https://rocket.rs/images/logo-boxed.png" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../rocket_codegen/index.html">
+                <img src="https://rocket.rs/images/logo-boxed.png" alt="logo"></a><div class="sidebar-elems"><h2><a href="index.html">In rocket_codegen</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Derive Macro <a href="index.html">rocket_codegen</a>::<wbr><a class="derive" href="#">UriDisplayQuery</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/rocket_codegen/lib.rs.html#1034-1036">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><div class="item-decl"><pre class="rust"><code>#[derive(UriDisplayQuery)]
+{
+    // Attributes available to this derive:
+    #[field]
+}
+</code></pre></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Derive for the <a href="../rocket/http/uri/fmt/trait.UriDisplay.html"><code>UriDisplay&lt;Query&gt;</code></a> trait.</p>
+<p>The <a href="../rocket/http/uri/fmt/trait.UriDisplay.html"><code>UriDisplay&lt;Query&gt;</code></a> derive can be applied to enums and structs. When
+applied to an enum, the enum must have at least one variant. When applied to
+a struct, the struct must have at least one field.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(UriDisplayQuery)]
+</span><span class="kw">enum </span>Kind {
+    A(String),
+    B(usize),
+}
+
+<span class="attr">#[derive(UriDisplayQuery)]
+</span><span class="kw">struct </span>MyStruct {
+    name: String,
+    id: usize,
+    kind: Kind,
+}</code></pre></div>
+<p>Each field’s type is required to implement <a href="../rocket/http/uri/fmt/trait.UriDisplay.html"><code>UriDisplay&lt;Query&gt;</code></a>.</p>
+<p>The derive generates an implementation of the <a href="../rocket/http/uri/fmt/trait.UriDisplay.html"><code>UriDisplay&lt;Query&gt;</code></a> trait.
+The implementation calls <a href="../rocket/http/uri/fmt/struct.Formatter.html#method.write_named_value"><code>Formatter::write_named_value()</code></a> for every named
+field, using the field’s name (unless overridden, explained next) as the
+<code>name</code> parameter, and <a href="../rocket/http/uri/fmt/struct.Formatter.html#method.write_value"><code>Formatter::write_value()</code></a> for every unnamed field
+in the order the fields are declared.</p>
+<p>The derive accepts one field attribute: <code>field</code>, with the following syntax:</p>
+<div class="example-wrap"><pre class="language-text"><code>field := &#39;name&#39; &#39;=&#39; &#39;&quot;&#39; FIELD_NAME &#39;&quot;&#39;
+       | &#39;value&#39; &#39;=&#39; &#39;&quot;&#39; FIELD_VALUE &#39;&quot;&#39;
+
+FIELD_NAME := valid HTTP field name
+FIELD_VALUE := valid HTTP field value
+</code></pre></div>
+<p>When applied to a struct, the attribute can only contain <code>name</code> and looks
+as follows:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(UriDisplayQuery)]
+</span><span class="kw">struct </span>MyStruct {
+    name: String,
+    id: usize,
+    <span class="attr">#[field(name = <span class="string">&quot;type&quot;</span>)]
+    #[field(name = <span class="string">&quot;kind&quot;</span>)]
+    </span>kind: Kind,
+}</code></pre></div>
+<p>The field attribute directs that a different field name be used when calling
+<a href="../rocket/http/uri/fmt/struct.Formatter.html#method.write_named_value"><code>Formatter::write_named_value()</code></a> for the given field. The value of the
+<code>name</code> attribute is used instead of the structure’s actual field name. If
+more than one <code>field</code> attribute is applied to a field, the <em>first</em> name is
+used. In the example above, the field <code>MyStruct::kind</code> is rendered with a
+name of <code>type</code>.</p>
+<p>The attribute can slso be applied to variants of C-like enums; it may only
+contain <code>value</code> and looks as follows:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(UriDisplayQuery)]
+</span><span class="kw">enum </span>Kind {
+    File,
+    <span class="attr">#[field(value = <span class="string">&quot;str&quot;</span>)]
+    #[field(value = <span class="string">&quot;string&quot;</span>)]
+    </span>String,
+    Other
+}</code></pre></div>
+<p>The field attribute directs that a different value be used when calling
+<a href="../rocket/http/uri/fmt/struct.Formatter.html#method.write_named_value"><code>Formatter::write_named_value()</code></a> for the given variant. The value of the
+<code>value</code> attribute is used instead of the variant’s actual name. If more than
+one <code>field</code> attribute is applied to a variant, the <em>first</em> value is used. In
+the example above, the variant <code>Kind::String</code> will render with a value of
+<code>str</code>.</p>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="rocket_codegen" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (c18a5e8a5 2023-01-25)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-a43118d2dfb2799d.js" data-settings-css="settings-7c23ac01f615ce90.css" ></div></body></html>

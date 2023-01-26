@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["DatasetApi","A dataset API handler."],["ListOptions","A list of options used to create a dataset API handler."]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Client","A `blocking` client to construct and dispatch local requests."],["LocalRequest","A `blocking` local request as returned by `Client`."],["LocalResponse","A `blocking` response from a dispatched `LocalRequest`."]]};

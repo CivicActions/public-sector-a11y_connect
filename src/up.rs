@@ -1,12 +1,9 @@
 extern crate reqwest;
-mod modname {
-    pub(crate) extern crate rocket;
-}
-
+extern crate rocket;
 extern crate serde_json;
 extern crate tokio;
-#[macro_use]
-extern crate rocket;
+
+use rocket::{post, request};
 use serde_json::Value;
 
 #[post("/up", data = "<data>")]

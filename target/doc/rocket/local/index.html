@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Structures for local dispatching of requests, primarily for testing."><meta name="keywords" content="rust, rustlang, rust-lang, local"><title>rocket::local - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-6d262342be62306e.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-5f7299aa2b503fb1.css"><link rel="stylesheet" disabled href="../../static.files/dark-dfb18ef8114bb428.css"><link rel="stylesheet" disabled href="../../static.files/ayu-4047a6aaddd3789d.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="icon" href="https://rocket.rs/images/favicon.ico"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../../rocket/index.html"><img src="https://rocket.rs/images/logo-boxed.png" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../../rocket/index.html">
+                <img src="https://rocket.rs/images/logo-boxed.png" alt="logo"></a><h2 class="location"><a href="#">Module local</a></h2><div class="sidebar-elems"><section><ul class="block"><li><a href="#modules">Modules</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Module <a href="../index.html">rocket</a>::<wbr><a class="mod" href="#">local</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../../src/rocket/local/mod.rs.html#1-187">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Structures for local dispatching of requests, primarily for testing.</p>
+<p>This module allows for simple request dispatching against a local,
+non-networked instance of Rocket. The primary use of this module is to unit
+and integration test Rocket applications by crafting requests, dispatching
+them, and verifying the response.</p>
+<h2 id="async-vs-blocking"><a href="#async-vs-blocking">Async. vs. Blocking</a></h2>
+<p>This module contains two variants, in its two submodules, of the same local
+API: <a href="asynchronous/index.html" title="asynchronous"><code>asynchronous</code></a>, and <a href="blocking/index.html" title="blocking"><code>blocking</code></a>. As their names imply, the
+<code>asynchronous</code> API is <code>async</code>, returning a <code>Future</code> for operations that
+would otherwise block, while <code>blocking</code> blocks for the same operations.</p>
+<p>Unless your request handling requires concurrency to make progress, or
+you’re making use of a <code>Client</code> in an environment that necessitates or would
+benefit from concurrency, you should use the <code>blocking</code> set of APIs due
+their ease-of-use. If your request handling <em>does</em> require concurrency to
+make progress, for instance by having one handler <code>await</code> a response
+generated from a request to another handler, use the <code>asynchronous</code> set of
+APIs.</p>
+<p>Both APIs include a <code>Client</code> structure that is used to create <code>LocalRequest</code>
+structures that can be dispatched against a given <a href="../struct.Rocket.html"><code>Rocket</code></a>
+instance to yield a <code>LocalResponse</code> structure. The APIs are identical except
+in that the <code>asynchronous</code> APIs return <code>Future</code>s for otherwise blocking
+operations.</p>
+<h2 id="unitintegration-testing"><a href="#unitintegration-testing">Unit/Integration Testing</a></h2>
+<p>This module is primarily intended to be used to test a Rocket application by
+constructing requests via <code>Client</code>, dispatching them, and validating the
+resulting response. As a complete example, consider the following “Hello,
+world!” application, with testing.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[macro_use] </span><span class="kw">extern crate </span>rocket;
+
+<span class="attr">#[get(<span class="string">&quot;/&quot;</span>)]
+</span><span class="kw">fn </span>hello() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+    <span class="string">&quot;Hello, world!&quot;
+</span>}
+
+<span class="attr">#[launch]
+</span><span class="kw">fn </span>rocket() -&gt; <span class="kw">_ </span>{
+    rocket::build().mount(<span class="string">&quot;/&quot;</span>, <span class="macro">routes!</span>[hello])
+}
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+    <span class="comment">// Using the preferred `blocking` API.
+    </span><span class="attr">#[test]
+    </span><span class="kw">fn </span>test_hello_world_blocking() {
+        <span class="kw">use </span>rocket::local::blocking::Client;
+
+        <span class="comment">// Construct a client to use for dispatching requests.
+        </span><span class="kw">let </span>client = Client::tracked(<span class="kw">super</span>::rocket())
+            .expect(<span class="string">&quot;valid `Rocket`&quot;</span>);
+
+        <span class="comment">// Dispatch a request to &#39;GET /&#39; and validate the response.
+        </span><span class="kw">let </span>response = client.get(<span class="string">&quot;/&quot;</span>).dispatch();
+        <span class="macro">assert_eq!</span>(response.into_string().unwrap(), <span class="string">&quot;Hello, world!&quot;</span>);
+    }
+
+    <span class="comment">// Using the `asynchronous` API.
+    </span><span class="attr">#[rocket::async_test]
+    </span><span class="kw">async fn </span>test_hello_world_async() {
+        <span class="kw">use </span>rocket::local::asynchronous::Client;
+
+        <span class="comment">// Construct a client to use for dispatching requests.
+        </span><span class="kw">let </span>client = Client::tracked(<span class="kw">super</span>::rocket()).<span class="kw">await
+            </span>.expect(<span class="string">&quot;valid `Rocket`&quot;</span>);
+
+        <span class="comment">// Dispatch a request to &#39;GET /&#39; and validate the response.
+        </span><span class="kw">let </span>response = client.get(<span class="string">&quot;/&quot;</span>).dispatch().<span class="kw">await</span>;
+        <span class="macro">assert_eq!</span>(response.into_string().<span class="kw">await</span>.unwrap(), <span class="string">&quot;Hello, world!&quot;</span>);
+    }
+}</code></pre></div>
+<p>For more details on testing, see the <a href="https://rocket.rs/v0.5-rc/guide/testing/">testing guide</a>.</p>
+<h2 id="client"><a href="#client"><code>Client</code></a></h2>
+<p>A <code>Client</code>, either <a href="blocking/struct.Client.html" title="blocking::Client"><code>blocking::Client</code></a> or <a href="asynchronous/struct.Client.html" title="asynchronous::Client"><code>asynchronous::Client</code></a>,
+referred to as simply <a href="asynchronous/struct.Client.html"><code>Client</code></a> and <a href="asynchronous/struct.Client.html"><code>async</code> <code>Client</code></a>, respectively,
+constructs requests for local dispatching.</p>
+<p><strong>Usage</strong></p>
+<p>A <code>Client</code> is constructed via the <a href="blocking/struct.Client.html#method.tracked"><code>tracked()</code></a> (<a href="asynchronous/struct.Client.html#method.tracked"><code>async</code> <code>tracked()</code></a>) or
+<a href="blocking/struct.Client.html#method.untracked"><code>untracked()</code></a> (<a href="asynchronous/struct.Client.html#method.untracked"><code>async</code> <code>untracked()</code></a>) methods from an already
+constructed <code>Rocket</code> instance. Once a value of <code>Client</code> has been
+constructed, <a href="blocking/struct.Client.html#method.get"><code>get()</code></a>, <a href="blocking/struct.Client.html#method.put"><code>put()</code></a>, <a href="blocking/struct.Client.html#method.post"><code>post()</code></a>, and so on (<a href="asynchronous/struct.Client.html#method.get"><code>async</code> <code>get()</code></a>,
+<a href="asynchronous/struct.Client.html#method.put"><code>async</code> <code>put()</code></a>, <a href="asynchronous/struct.Client.html#method.post"><code>async</code> <code>post()</code></a>) can be called to create a
+<a href="blocking/struct.LocalRequest.html"><code>LocalRequest</code></a> (<a href="asynchronous/struct.LocalRequest.html"><code>async</code> <code>LocalRequest</code></a>) for dispatching.</p>
+<p><strong>Cookie Tracking</strong></p>
+<p>A <code>Client</code> constructed using <code>tracked()</code> propagates cookie changes made by
+responses to previously dispatched requests. In other words, if a previously
+dispatched request resulted in a response that adds a cookie, any future
+requests will contain that cookie. Similarly, cookies removed by a response
+won’t be propagated further.</p>
+<p>This is typically the desired mode of operation for a <code>Client</code> as it removes
+the burden of manually tracking cookies. Under some circumstances, however,
+disabling this tracking may be desired. In these cases, use the
+<code>untracked()</code> constructor to create a <code>Client</code> that <em>will not</em> track
+cookies.</p>
+<p><strong>Example</strong></p>
+<p>For a usage example, see <a href="asynchronous/struct.Client.html"><code>Client</code></a> or <a href="asynchronous/struct.Client.html"><code>async</code> <code>Client</code></a>.</p>
+<h2 id="localrequest"><a href="#localrequest"><code>LocalRequest</code></a></h2>
+<p>A <a href="blocking/struct.LocalRequest.html"><code>LocalRequest</code></a> (<a href="asynchronous/struct.LocalRequest.html"><code>async</code> <code>LocalRequest</code></a>) is constructed via a <code>Client</code>.
+Once obtained, headers, cookies, including private cookies, the remote IP
+address, and the request body can all be set via methods on the
+<code>LocalRequest</code> structure.</p>
+<p><strong>Dispatching</strong></p>
+<p>A <code>LocalRequest</code> is dispatched by calling <a href="blocking/struct.LocalRequest.html#method.dispatch"><code>dispatch()</code></a> (<a href="asynchronous/struct.LocalRequest.html#method.dispatch"><code>async</code>
+<code>dispatch()</code></a>). The <code>LocalRequest</code> is consumed and a <a href="blocking/struct.LocalResponse.html"><code>LocalResponse</code></a>
+(<a href="asynchronous/struct.LocalResponse.html"><code>async</code> <code>LocalResponse</code></a>) is returned.</p>
+<p>Note that <code>LocalRequest</code> implements <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="Clone"><code>Clone</code></a>. As such, if the same request
+needs to be dispatched multiple times, the request can first be cloned and
+then dispatched: <code>request.clone().dispatch()</code>.</p>
+<p><strong>Example</strong></p>
+<p>For a usage example, see <a href="blocking/struct.LocalRequest.html"><code>LocalRequest</code></a> or <a href="asynchronous/struct.LocalRequest.html"><code>async</code> <code>LocalRequest</code></a>.</p>
+<h2 id="localresponse"><a href="#localresponse"><code>LocalResponse</code></a></h2>
+<p>The result of <code>dispatch()</code>ing a <code>LocalRequest</code> is a <a href="blocking/struct.LocalResponse.html"><code>LocalResponse</code></a>
+(<a href="asynchronous/struct.LocalResponse.html"><code>async</code> <code>LocalResponse</code></a>). A <code>LocalResponse</code> can be queried for response
+metadata, including the HTTP status, headers, and cookies, via its getter
+methods. Additionally, the body of the response can be read into a string
+(<a href="blocking/struct.LocalResponse.html#method.into_string"><code>into_string()</code></a> or <a href="asynchronous/struct.LocalResponse.html#method.into_string"><code>async</code> <code>into_string()</code></a>) or a vector
+(<a href="blocking/struct.LocalResponse.html#method.into_bytes"><code>into_bytes()</code></a> or <a href="asynchronous/struct.LocalResponse.html#method.into_bytes"><code>async</code> <code>into_bytes()</code></a>).</p>
+<p>The response body must also be read directly using standard I/O mechanisms:
+the <code>blocking</code> <code>LocalResponse</code> implements <code>Read</code> while the <code>async</code>
+<code>LocalResponse</code> implements <code>AsyncRead</code>.</p>
+<p>For a usage example, see <a href="blocking/struct.LocalResponse.html"><code>LocalResponse</code></a> or <a href="asynchronous/struct.LocalResponse.html"><code>async</code> <code>LocalResponse</code></a>.</p>
+</div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="asynchronous/index.html" title="rocket::local::asynchronous mod">asynchronous</a></div><div class="item-right docblock-short">Asynchronous local dispatching of requests.</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="blocking/index.html" title="rocket::local::blocking mod">blocking</a></div><div class="item-right docblock-short">Blocking local dispatching of requests.</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rocket" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (c18a5e8a5 2023-01-25)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-a43118d2dfb2799d.js" data-settings-css="settings-7c23ac01f615ce90.css" ></div></body></html>

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Token","Where to generate the key."]],"struct":[["KeyType","Types of `SecKey`s."],["SecKey","A type representing an encryption key."]]};

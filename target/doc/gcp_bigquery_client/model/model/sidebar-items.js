@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["ModelType","Output only. Type of the model resource."]],"struct":[["Model",""]]};

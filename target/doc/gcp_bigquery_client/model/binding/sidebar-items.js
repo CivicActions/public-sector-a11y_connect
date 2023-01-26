@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Binding","Binding : Associates `members` with a `role`."]]};

@@ -1,0 +1,411 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Trait implemented by form guards: types parseable from HTTP forms."><meta name="keywords" content="rust, rustlang, rust-lang, FromForm"><title>FromForm in rocket::form - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-6d262342be62306e.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-5f7299aa2b503fb1.css"><link rel="stylesheet" disabled href="../../static.files/dark-dfb18ef8114bb428.css"><link rel="stylesheet" disabled href="../../static.files/ayu-4047a6aaddd3789d.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="icon" href="https://rocket.rs/images/favicon.ico"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../../rocket/index.html"><img src="https://rocket.rs/images/logo-boxed.png" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../../rocket/index.html">
+                <img src="https://rocket.rs/images/logo-boxed.png" alt="logo"></a><h2 class="location"><a href="#">FromForm</a></h2><div class="sidebar-elems"><section><h3><a href="#required-associated-types">Required Associated Types</a></h3><ul class="block"><li><a href="#associatedtype.Context">Context</a></li></ul><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.finalize">finalize</a></li><li><a href="#tymethod.init">init</a></li><li><a href="#tymethod.push_data">push_data</a></li><li><a href="#tymethod.push_value">push_value</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.default">default</a></li><li><a href="#method.push_error">push_error</a></li></ul><h3><a href="#foreign-impls">Implementations on Foreign Types</a></h3><ul class="block"><li><a href="#impl-FromForm%3C%27v%3E-for-(A%2C%20B)">(A, B)</a></li><li><a href="#impl-FromForm%3C%27v%3E-for-BTreeMap%3CK%2C%20V%3E">BTreeMap&lt;K, V&gt;</a></li><li><a href="#impl-FromForm%3C%27v%3E-for-HashMap%3CK%2C%20V%3E">HashMap&lt;K, V&gt;</a></li><li><a href="#impl-FromForm%3C%27v%3E-for-Option%3CT%3E">Option&lt;T&gt;</a></li><li><a href="#impl-FromForm%3C%27v%3E-for-Vec%3CT%3E">Vec&lt;T&gt;</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In rocket::form</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="../index.html">rocket</a>::<wbr><a href="index.html">form</a>::<wbr><a class="trait" href="#">FromForm</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../../src/rocket/form/from_form.rs.html#522-554">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><div class="item-decl"><pre class="rust"><code>pub trait FromForm&lt;'r&gt;: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a> {
+    type <a href="#associatedtype.Context" class="associatedtype">Context</a>: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>;
+
+    fn <a href="#tymethod.init" class="fn">init</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.push_value" class="fn">push_value</a>(ctxt: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, field: <a class="struct" href="struct.ValueField.html" title="struct rocket::form::ValueField">ValueField</a>&lt;'r&gt;);
+<span class="item-spacer"></span>    fn <a href="#tymethod.push_data" class="fn">push_data</a>&lt;'life0, 'life1, 'async_trait&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctxt: &amp;'life0 mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;field: <a class="struct" href="struct.DataField.html" title="struct rocket::form::DataField">DataField</a>&lt;'r, 'life1&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="where">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Self: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'r: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'life0: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'life1: 'async_trait</span>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.finalize" class="fn">finalize</a>(ctxt: Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>) -&gt; <a class="type" href="type.Result.html" title="type rocket::form::Result">Result</a>&lt;'r, Self&gt;;
+
+    fn <a href="#method.push_error" class="fn">push_error</a>(_ctxt: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, _error: <a class="struct" href="struct.Error.html" title="struct rocket::form::Error">Error</a>&lt;'r&gt;) { ... }
+<span class="item-spacer"></span>    fn <a href="#method.default" class="fn">default</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Self&gt; { ... }
+}</code></pre></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Trait implemented by form guards: types parseable from HTTP forms.</p>
+<p>Only form guards that are <em>collections</em>, that is, collect more than one form
+field while parsing, should implement <code>FromForm</code>. All other types should
+implement <a href="trait.FromFormField.html" title="FromFormField"><code>FromFormField</code></a> instead, which offers a simplified interface to
+parsing a single form field.</p>
+<p>For a gentle introduction to forms in Rocket, see the <a href="https://rocket.rs/v0.5-rc/guide/requests/#forms">forms guide</a>.</p>
+<h2 id="form-guards"><a href="#form-guards">Form Guards</a></h2>
+<p>A form guard is a guard that operates on form fields, typically those with a
+particular name prefix. Form guards validate and parse form field data via
+implementations of <code>FromForm</code>. In other words, a type is a form guard <em>iff</em>
+it implements <code>FromFrom</code>.</p>
+<p>Form guards are used as the inner type of the <a href="struct.Form.html"><code>Form</code></a> data guard:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::Form;
+
+<span class="attr">#[post(<span class="string">&quot;/submit&quot;</span>, data = <span class="string">&quot;&lt;var&gt;&quot;</span>)]
+</span><span class="kw">fn </span>submit(var: Form&lt;FormGuard&gt;) { <span class="comment">/* ... */ </span>}</code></pre></div>
+<h2 id="deriving"><a href="#deriving">Deriving</a></h2>
+<p>This trait can, and largely <em>should</em>, be automatically derived. When
+deriving <code>FromForm</code>, every field in the structure must implement
+<a href="trait.FromForm.html"><code>FromForm</code></a>. Form fields with the struct field’s name are <a href="name/struct.NameView.html#method.shift">shifted</a> and
+then pushed to the struct field’s <code>FromForm</code> parser.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::FromForm;
+
+<span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>TodoTask&lt;<span class="lifetime">&#39;r</span>&gt; {
+    <span class="attr">#[field(validate = len(<span class="number">1</span>..))]
+    </span>description: <span class="kw-2">&amp;</span><span class="lifetime">&#39;r </span>str,
+    <span class="attr">#[field(name = <span class="string">&quot;done&quot;</span>)]
+    </span>completed: bool
+}</code></pre></div>
+<p>For full details on deriving <code>FromForm</code>, see the <a href="../derive.FromForm.html"><code>FromForm</code> derive</a>.</p>
+<h2 id="parsing-strategy"><a href="#parsing-strategy">Parsing Strategy</a></h2>
+<p>Form parsing is either <em>strict</em> or <em>lenient</em>, controlled by
+<a href="struct.Options.html#structfield.strict" title="Options::strict"><code>Options::strict</code></a>. A <em>strict</em> parse errors when there are missing or extra
+fields, while a <em>lenient</em> parse allows both, providing there is a
+<a href="trait.FromForm.html#method.default"><code>default()</code></a> in the case of a missing field.</p>
+<p>Most type inherit their strategy on <a href="trait.FromForm.html#tymethod.init" title="FromForm::init()"><code>FromForm::init()</code></a>, but some types
+like <code>Option</code> override the requested strategy. The strategy can also be
+overwritten manually, per-field or per-value, by using the <a href="struct.Strict.html" title="Strict"><code>Strict</code></a> or
+<a href="struct.Lenient.html" title="Lenient"><code>Lenient</code></a> form guard:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::{<span class="self">self</span>, FromForm, Strict, Lenient};
+
+<span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>TodoTask&lt;<span class="lifetime">&#39;r</span>&gt; {
+    strict_bool: Strict&lt;bool&gt;,
+    lenient_inner_option: <span class="prelude-ty">Option</span>&lt;Lenient&lt;bool&gt;&gt;,
+    strict_inner_result: form::Result&lt;<span class="lifetime">&#39;r</span>, Strict&lt;bool&gt;&gt;,
+}</code></pre></div>
+<h2 id="defaults"><a href="#defaults">Defaults</a></h2>
+<p>A form guard may have a <em>default</em> which is used in case of a missing field
+when parsing is <em>lenient</em>. When parsing is strict, all errors, including
+missing fields, are propagated directly.</p>
+<h2 id="provided-implementations"><a href="#provided-implementations">Provided Implementations</a></h2>
+<p>Rocket implements <code>FromForm</code> for many common types. As a result, most
+applications will never need a custom implementation of <code>FromForm</code> or
+<code>FromFormField</code>. Their behavior is documented in the table below.</p>
+<div><table><thead><tr><th>Type</th><th>Strategy</th><th>Default</th><th>Data</th><th>Value</th><th>Notes</th></tr></thead><tbody>
+<tr><td><a href="struct.Strict.html"><code>Strict&lt;T&gt;</code></a></td><td><strong>strict</strong></td><td>if <code>strict</code> <code>T</code></td><td>if <code>T</code></td><td>if <code>T</code></td><td><code>T: FromForm</code></td></tr>
+<tr><td><a href="struct.Lenient.html"><code>Lenient&lt;T&gt;</code></a></td><td><strong>lenient</strong></td><td>if <code>lenient</code> <code>T</code></td><td>if <code>T</code></td><td>if <code>T</code></td><td><code>T: FromForm</code></td></tr>
+<tr><td><code>Option&lt;T&gt;</code></td><td><strong>strict</strong></td><td><code>None</code></td><td>if <code>T</code></td><td>if <code>T</code></td><td>Infallible, <code>T: FromForm</code></td></tr>
+<tr><td><a href="type.Result.html"><code>Result&lt;T&gt;</code></a></td><td><em>inherit</em></td><td><code>T::finalize()</code></td><td>if <code>T</code></td><td>if <code>T</code></td><td>Infallible, <code>T: FromForm</code></td></tr>
+<tr><td><code>Vec&lt;T&gt;</code></td><td><em>inherit</em></td><td><code>vec![]</code></td><td>if <code>T</code></td><td>if <code>T</code></td><td><code>T: FromForm</code></td></tr>
+<tr><td><a href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html"><code>HashMap&lt;K, V&gt;</code></a></td><td><em>inherit</em></td><td><code>HashMap::new()</code></td><td>if <code>V</code></td><td>if <code>V</code></td><td><code>K: FromForm + Eq + Hash</code>, <code>V: FromForm</code></td></tr>
+<tr><td><a href="https://doc.rust-lang.org/nightly/alloc/collections/btree/map/struct.BTreeMap.html"><code>BTreeMap&lt;K, V&gt;</code></a></td><td><em>inherit</em></td><td><code>BTreeMap::new()</code></td><td>if <code>V</code></td><td>if <code>V</code></td><td><code>K: FromForm + Ord</code>, <code>V: FromForm</code></td></tr>
+<tr><td><code>bool</code></td><td><em>inherit</em></td><td><code>false</code></td><td>No</td><td>Yes</td><td><code>&quot;yes&quot;/&quot;on&quot;/&quot;true&quot;</code>, <code>&quot;no&quot;/&quot;off&quot;/&quot;false&quot;</code></td></tr>
+<tr><td>(un)signed int</td><td><em>inherit</em></td><td><strong>no default</strong></td><td>No</td><td>Yes</td><td><code>{u,i}{size,8,16,32,64,128}</code></td></tr>
+<tr><td><em>nonzero</em> int</td><td><em>inherit</em></td><td><strong>no default</strong></td><td>No</td><td>Yes</td><td><code>NonZero{I,U}{size,8,16,32,64,128}</code></td></tr>
+<tr><td>float</td><td><em>inherit</em></td><td><strong>no default</strong></td><td>No</td><td>Yes</td><td><code>f{32,64}</code></td></tr>
+<tr><td><code>&amp;str</code></td><td><em>inherit</em></td><td><strong>no default</strong></td><td>Yes</td><td>Yes</td><td>Percent-decoded. Data limit <code>string</code> applies.</td></tr>
+<tr><td><code>String</code></td><td><em>inherit</em></td><td><strong>no default</strong></td><td>Yes</td><td>Yes</td><td>Exactly <code>&amp;str</code>, but owned. Prefer <code>&amp;str</code>.</td></tr>
+<tr><td>IP Address</td><td><em>inherit</em></td><td><strong>no default</strong></td><td>No</td><td>Yes</td><td><a href="https://doc.rust-lang.org/nightly/std/net/ip_addr/enum.IpAddr.html"><code>IpAddr</code></a>, <a href="https://doc.rust-lang.org/nightly/std/net/ip_addr/struct.Ipv4Addr.html"><code>Ipv4Addr</code></a>, <a href="https://doc.rust-lang.org/nightly/std/net/ip_addr/struct.Ipv6Addr.html"><code>Ipv6Addr</code></a></td></tr>
+<tr><td>Socket Address</td><td><em>inherit</em></td><td><strong>no default</strong></td><td>No</td><td>Yes</td><td><a href="https://doc.rust-lang.org/nightly/std/net/socket_addr/enum.SocketAddr.html"><code>SocketAddr</code></a>, <a href="https://doc.rust-lang.org/nightly/std/net/socket_addr/struct.SocketAddrV4.html"><code>SocketAddrV4</code></a>, <a href="https://doc.rust-lang.org/nightly/std/net/socket_addr/struct.SocketAddrV6.html"><code>SocketAddrV6</code></a></td></tr>
+<tr><td><a href="../fs/enum.TempFile.html"><code>TempFile</code></a></td><td><em>inherit</em></td><td><strong>no default</strong></td><td>Yes</td><td>Yes</td><td>Data limits apply. See <a href="../fs/enum.TempFile.html"><code>TempFile</code></a>.</td></tr>
+<tr><td><a href="../data/struct.Capped.html"><code>Capped&lt;C&gt;</code></a></td><td><em>inherit</em></td><td><strong>no default</strong></td><td>Yes</td><td>Yes</td><td><code>C</code> is <code>&amp;str</code>, <code>String</code>, or <code>TempFile</code>.</td></tr>
+<tr><td><a href="../../time/date/struct.Date.html" title="time::Date"><code>time::Date</code></a></td><td><em>inherit</em></td><td><strong>no default</strong></td><td>No</td><td>Yes</td><td><code>%F</code> (<code>YYYY-MM-DD</code>). HTML “date” input.</td></tr>
+<tr><td><a href="../../time/primitive_date_time/struct.PrimitiveDateTime.html"><code>time::DateTime</code></a></td><td><em>inherit</em></td><td><strong>no default</strong></td><td>No</td><td>Yes</td><td><code>%FT%R</code> or <code>%FT%T</code> (<code>YYYY-MM-DDTHH:MM[:SS]</code>)</td></tr>
+<tr><td><a href="../../time/time/struct.Time.html" title="time::Time"><code>time::Time</code></a></td><td><em>inherit</em></td><td><strong>no default</strong></td><td>No</td><td>Yes</td><td><code>%R</code> or <code>%T</code> (<code>HH:MM[:SS]</code>)</td></tr>
+</tbody></table>
+</div><h3 id="additional-notes"><a href="#additional-notes">Additional Notes</a></h3>
+<ul>
+<li>
+<p><strong><code>Vec&lt;T&gt;</code> where <code>T: FromForm</code></strong></p>
+<p>Parses a sequence of <code>T</code>’s. A new <code>T</code> is created whenever the field
+name’s key changes or is empty; the previous <code>T</code> is finalized and errors
+are stored. While the key remains the same and non-empty, form values
+are pushed to the current <code>T</code> after being shifted. All collected errors
+are returned at finalization, if any, or the successfully created vector
+is returned.</p>
+</li>
+<li>
+<p><strong><code>HashMap&lt;K, V&gt;</code> where <code>K: FromForm + Eq + Hash</code>, <code>V: FromForm</code></strong></p>
+<p><strong><code>BTreeMap&lt;K, V&gt;</code> where <code>K: FromForm + Ord</code>, <code>V: FromForm</code></strong></p>
+<p>Parses a sequence of <code>(K, V)</code>’s. A new pair is created for every unique
+first index of the key.</p>
+<p>If the key has only one index (<code>map[index]=value</code>), the index itself is
+pushed to <code>K</code>’s parser and the remaining shifted field is pushed to
+<code>V</code>’s parser.</p>
+<p>If the key has two indices (<code>map[k:index]=value</code> or
+<code>map[v:index]=value</code>), the first index must start with <code>k</code> or <code>v</code>. If
+the first index starts with <code>k</code>, the shifted field is pushed to <code>K</code>’s
+parser. If the first index starts with <code>v</code>, the shifted field is pushed
+to <code>V</code>’s parser. If the first index is anything else, an error is
+created for the offending form field.</p>
+<p>Errors are collected as they occur. Finalization finalizes all pairs and
+returns errors, if any, or the map.</p>
+</li>
+<li>
+<p><strong><code>bool</code></strong></p>
+<p>Parses as <code>false</code> for missing values (when lenient) and case-insensitive
+values of <code>off</code>, <code>false</code>, and <code>no</code>. Parses as <code>true</code> for values of <code>on</code>,
+<code>true</code>, <code>yes</code>, and the empty value. Failed to parse otherwise.</p>
+</li>
+<li>
+<p><strong><a href="../../time/primitive_date_time/struct.PrimitiveDateTime.html"><code>time::DateTime</code></a></strong></p>
+<p>Parses a date in <code>%FT%R</code> or <code>%FT%T</code> format, that is, <code>YYYY-MM-DDTHH:MM</code>
+or <code>YYYY-MM-DDTHH:MM:SS</code>. This is the <code>&quot;datetime-local&quot;</code> HTML input type
+without support for the millisecond variant.</p>
+</li>
+<li>
+<p><strong><a href="../../time/time/struct.Time.html" title="time::Time"><code>time::Time</code></a></strong></p>
+<p>Parses a time in <code>%R</code> or <code>%T</code> format, that is, <code>HH:MM</code> or <code>HH:MM:SS</code>.
+This is the <code>&quot;time&quot;</code> HTML input type without support for the millisecond
+variant.</p>
+</li>
+</ul>
+<h2 id="push-parsing"><a href="#push-parsing">Push Parsing</a></h2>
+<p><code>FromForm</code> describes a push-based parser for Rocket’s <a href="index.html#field-wire-format">field wire format</a>.
+Fields are preprocessed into either <a href="struct.ValueField.html" title="ValueField"><code>ValueField</code></a>s or <a href="struct.DataField.html" title="DataField"><code>DataField</code></a>s which
+are then pushed to the parser in <a href="trait.FromForm.html#tymethod.push_value" title="FromForm::push_value()"><code>FromForm::push_value()</code></a> or
+<a href="trait.FromForm.html#tymethod.push_data" title="FromForm::push_data()"><code>FromForm::push_data()</code></a>, respectively. Both url-encoded forms and
+multipart forms are supported. All url-encoded form fields are preprocessed
+as <a href="struct.ValueField.html" title="ValueField"><code>ValueField</code></a>s. Multipart form fields with Content-Types are processed
+as <a href="struct.DataField.html" title="DataField"><code>DataField</code></a>s while those without a set Content-Type are processed as
+<a href="struct.ValueField.html" title="ValueField"><code>ValueField</code></a>s. <code>ValueField</code> field names and values are percent-decoded.</p>
+<p>Parsing is split into 3 stages. After preprocessing, the three stages are:</p>
+<ol>
+<li>
+<p><strong>Initialization.</strong> The type sets up a context for later <code>push</code>es.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::Options;
+
+<span class="kw">fn </span>init(opts: Options) -&gt; <span class="self">Self</span>::Context {
+    <span class="macro">todo!</span>(<span class="string">&quot;return a context for storing parse state&quot;</span>)
+}</code></pre></div>
+</li>
+<li>
+<p><strong>Push.</strong> The structure is repeatedly pushed form fields; the latest
+context is provided with each <code>push</code>. If the structure contains
+children, it uses the first <a href="name/struct.NameView.html#method.key"><code>key()</code></a> to identify a child to which it
+then <code>push</code>es the remaining <code>field</code> to, likely with a <a href="name/struct.NameView.html#method.shift"><code>shift()</code>ed</a>
+name. Otherwise, the structure parses the <code>value</code> itself. The context
+is updated as needed.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::{ValueField, DataField};
+
+<span class="kw">fn </span>push_value(ctxt: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Context, field: ValueField&lt;<span class="lifetime">&#39;r</span>&gt;) {
+    <span class="macro">todo!</span>(<span class="string">&quot;modify context as necessary for `field`&quot;</span>)
+}
+
+<span class="kw">async fn </span>push_data(ctxt: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Context, field: DataField&lt;<span class="lifetime">&#39;r</span>, <span class="lifetime">&#39;_</span>&gt;) {
+    <span class="macro">todo!</span>(<span class="string">&quot;modify context as necessary for `field`&quot;</span>)
+}</code></pre></div>
+</li>
+<li>
+<p><strong>Finalization.</strong> The structure is informed that there are no further
+fields. It systemizes the effects of previous <code>push</code>es via its context
+to return a parsed structure or generate <a href="struct.Errors.html" title="Errors"><code>Errors</code></a>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::Result;
+
+<span class="kw">fn </span>finalize(ctxt: <span class="self">Self</span>::Context) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="lifetime">&#39;r</span>, <span class="self">Self</span>&gt; {
+    <span class="macro">todo!</span>(<span class="string">&quot;inspect context to generate `Self` or `Errors`&quot;</span>)
+}</code></pre></div>
+</li>
+</ol>
+<p>These three stages make up the entirety of the <code>FromForm</code> trait.</p>
+<h3 id="nesting-and-nameview"><a href="#nesting-and-nameview">Nesting and <code>NameView</code></a></h3>
+<p>Each field name key typically identifies a unique child of a structure. As
+such, when processed left-to-right, the keys of a field jointly identify a
+unique leaf of a structure. The value of the field typically represents the
+desired value of the leaf.</p>
+<p>A <a href="name/struct.NameView.html" title="NameView"><code>NameView</code></a> captures and simplifies this “left-to-right” processing of a
+field’s name by exposing a sliding-prefix view into a name. A <a href="name/struct.NameView.html#method.shift"><code>shift()</code></a>
+shifts the view one key to the right. Thus, a <code>Name</code> of <code>a.b.c</code> when viewed
+through a new <a href="name/struct.NameView.html" title="NameView"><code>NameView</code></a> is <code>a</code>. Shifted once, the view is <code>a.b</code>.
+<a href="name/struct.NameView.html#method.key"><code>key()</code></a> returns the last (or “current”) key in the view. A nested
+structure can thus handle a field with a <code>NameView</code>, operate on the
+<a href="name/struct.NameView.html#method.key"><code>key()</code></a>, <a href="name/struct.NameView.html#method.shift"><code>shift()</code></a> the <code>NameView</code>, and pass the field with the shifted
+<code>NameView</code> to the next processor which handles <code>b</code> and so on.</p>
+<h3 id="a-simple-example"><a href="#a-simple-example">A Simple Example</a></h3>
+<p>The following example uses <code>f1=v1&amp;f2=v2</code> to illustrate field/value pairs
+<code>(f1, v2)</code> and <code>(f2, v2)</code>. This is the same encoding used to send HTML forms
+over HTTP, though Rocket’s push-parsers are unaware of any specific
+encoding, dealing only with logical <code>field</code>s, <code>index</code>es, and <code>value</code>s.</p>
+<h4 id="a-single-field-t-formformfield"><a href="#a-single-field-t-formformfield">A Single Field (<code>T: FormFormField</code>)</a></h4>
+<p>The simplest example parses a single value of type <code>T</code> from a string with an
+optional default value: this is <code>impl&lt;T: FromFormField&gt; FromForm for T</code>:</p>
+<ol>
+<li>
+<p><strong>Initialization.</strong> The context stores form options and an <code>Option</code> of
+<code>Result&lt;T, form::Error&gt;</code> for storing the <code>result</code> of parsing <code>T</code>, which
+is initially set to <code>None</code>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::{<span class="self">self</span>, FromFormField};
+
+<span class="kw">struct </span>Context&lt;<span class="lifetime">&#39;r</span>, T: FromFormField&lt;<span class="lifetime">&#39;r</span>&gt;&gt; {
+    opts: form::Options,
+    result: <span class="prelude-ty">Option</span>&lt;form::Result&lt;<span class="lifetime">&#39;r</span>, T&gt;&gt;,
+}
+
+<span class="kw">fn </span>init(opts: form::Options) -&gt; Context&lt;<span class="lifetime">&#39;r</span>, T&gt; {
+   Context { opts, result: <span class="prelude-val">None </span>}
+}</code></pre></div>
+</li>
+<li>
+<p><strong>Push.</strong> If <code>ctxt.result</code> is <code>None</code>, <code>T</code> is parsed from <code>field</code>, and
+the result is stored in <code>context.result</code>. Otherwise a field has already
+been parsed and nothing is done.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>push_value(ctxt: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;r</span>, T&gt;, field: ValueField&lt;<span class="lifetime">&#39;r</span>&gt;) {
+    <span class="kw">if </span>ctxt.result.is_none() {
+        ctxt.result = <span class="prelude-val">Some</span>(T::from_value(field));
+    }
+}</code></pre></div>
+</li>
+<li>
+<p><strong>Finalization.</strong> If <code>ctxt.result</code> is <code>None</code>, parsing is lenient, and
+<code>T</code> has a default, the default is returned. Otherwise a <code>Missing</code> error
+is returned. If <code>ctxt.result</code> is <code>Some(v)</code>, the result <code>v</code> is returned.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>finalize(ctxt: Context&lt;<span class="lifetime">&#39;r</span>, T&gt;) -&gt; form::Result&lt;<span class="lifetime">&#39;r</span>, T&gt; {
+    <span class="kw">match </span>ctxt.result {
+        <span class="prelude-val">Some</span>(result) =&gt; result,
+        <span class="prelude-val">None </span><span class="kw">if </span>ctxt.opts.strict =&gt; <span class="prelude-val">Err</span>(Errors::from(ErrorKind::Missing)),
+        <span class="prelude-val">None </span>=&gt; <span class="kw">match </span>T::default() {
+            <span class="prelude-val">Some</span>(default) =&gt; <span class="prelude-val">Ok</span>(default),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(Errors::from(ErrorKind::Missing)),
+        }
+    }
+}</code></pre></div>
+</li>
+</ol>
+<p>This implementation is complete except for the following details:</p>
+<ul>
+<li>handling both <code>push_data</code> and <code>push_value</code></li>
+<li>checking for duplicate pushes when parsing is <code>strict</code></li>
+<li>tracking the field’s name and value to generate a complete <a href="struct.Error.html" title="Error"><code>Error</code></a></li>
+</ul>
+<h2 id="implementing"><a href="#implementing">Implementing</a></h2>
+<p>Implementing <code>FromForm</code> should be a rare occurrence. Prefer instead to use
+Rocket’s built-in derivation or, for custom types, implementing
+<a href="trait.FromFormField.html" title="FromFormField"><code>FromFormField</code></a>.</p>
+<p>An implementation of <code>FromForm</code> consists of implementing the three stages
+outlined above. <code>FromForm</code> is an async trait, so implementations must be
+decorated with an attribute of <code>#[rocket::async_trait]</code>:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::{<span class="self">self</span>, FromForm, DataField, ValueField};
+
+<span class="attr">#[rocket::async_trait]
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;r</span>&gt; FromForm&lt;<span class="lifetime">&#39;r</span>&gt; <span class="kw">for </span>MyType {
+    <span class="kw">type </span>Context = MyContext;
+
+    <span class="kw">fn </span>init(opts: form::Options) -&gt; <span class="self">Self</span>::Context {
+        <span class="macro">todo!</span>()
+    }
+
+    <span class="kw">fn </span>push_value(ctxt: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Context, field: ValueField&lt;<span class="lifetime">&#39;r</span>&gt;) {
+        <span class="macro">todo!</span>()
+    }
+
+    <span class="kw">async fn </span>push_data(ctxt: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Context, field: DataField&lt;<span class="lifetime">&#39;r</span>, <span class="lifetime">&#39;_</span>&gt;) {
+        <span class="macro">todo!</span>()
+    }
+
+    <span class="kw">fn </span>finalize(this: <span class="self">Self</span>::Context) -&gt; form::Result&lt;<span class="lifetime">&#39;r</span>, <span class="self">Self</span>&gt; {
+        <span class="macro">todo!</span>()
+    }
+}</code></pre></div>
+<p>The lifetime <code>'r</code> correponds to the lifetime of the request.</p>
+<h3 id="a-more-involved-example"><a href="#a-more-involved-example">A More Involved Example</a></h3>
+<p>We illustrate implementation of <code>FromForm</code> through an example. The example
+implements <code>FromForm</code> for a <code>Pair(A, B)</code> type where <code>A: FromForm</code> and <code>B: FromForm</code>, parseable from forms with at least two fields, one with a key of
+<code>0</code> and the other with a key of <code>1</code>. The field with key <code>0</code> is parsed as an
+<code>A</code> while the field with key <code>1</code> is parsed as a <code>B</code>. Specifically, to parse
+a <code>Pair(A, B)</code> from a field with prefix <code>pair</code>, a form with the following
+fields must be submitted:</p>
+<ul>
+<li><code>pair[0]</code> - type A</li>
+<li><code>pair[1]</code> - type B</li>
+</ul>
+<p>Examples include:</p>
+<ul>
+<li><code>pair[0]=id&amp;pair[1]=100</code> as <code>Pair(&amp;str, usize)</code></li>
+<li><code>pair[0]=id&amp;pair[1]=100</code> as <code>Pair(&amp;str, &amp;str)</code></li>
+<li><code>pair[0]=2012-10-12&amp;pair[1]=100</code> as <code>Pair(time::Date, &amp;str)</code></li>
+<li><code>pair.0=2012-10-12&amp;pair.1=100</code> as <code>Pair(time::Date, usize)</code></li>
+</ul>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>either::Either;
+<span class="kw">use </span>rocket::form::{<span class="self">self</span>, FromForm, ValueField, DataField, Error, Errors};
+
+<span class="doccomment">/// A form guard parseable from fields `.0` and `.1`.
+</span><span class="kw">struct </span>Pair&lt;A, B&gt;(A, B);
+
+<span class="comment">// The parsing context. We&#39;ll be pushing fields with key `.0` to `left`
+// and fields with `.1` to `right`. We&#39;ll collect errors along the way.
+</span><span class="kw">struct </span>PairContext&lt;<span class="lifetime">&#39;v</span>, A: FromForm&lt;<span class="lifetime">&#39;v</span>&gt;, B: FromForm&lt;<span class="lifetime">&#39;v</span>&gt;&gt; {
+    left: A::Context,
+    right: B::Context,
+    errors: Errors&lt;<span class="lifetime">&#39;v</span>&gt;,
+}
+
+<span class="attr">#[rocket::async_trait]
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;v</span>, A: FromForm&lt;<span class="lifetime">&#39;v</span>&gt;, B: FromForm&lt;<span class="lifetime">&#39;v</span>&gt;&gt; FromForm&lt;<span class="lifetime">&#39;v</span>&gt; <span class="kw">for </span>Pair&lt;A, B&gt; {
+    <span class="kw">type </span>Context = PairContext&lt;<span class="lifetime">&#39;v</span>, A, B&gt;;
+
+    <span class="comment">// We initialize the `PairContext` as expected.
+    </span><span class="kw">fn </span>init(opts: form::Options) -&gt; <span class="self">Self</span>::Context {
+        PairContext {
+            left: A::init(opts),
+            right: B::init(opts),
+            errors: Errors::new()
+        }
+    }
+
+    <span class="comment">// For each value, we determine if the key is `.0` (left) or `.1`
+    // (right) and push to the appropriate parser. If it was neither, we
+    // store the error for emission on finalization. The parsers for `A` and
+    // `B` will handle duplicate values and so on.
+    </span><span class="kw">fn </span>push_value(ctxt: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Context, field: ValueField&lt;<span class="lifetime">&#39;v</span>&gt;) {
+        <span class="kw">match </span>ctxt.context(field.name) {
+            <span class="prelude-val">Ok</span>(Either::Left(ctxt)) =&gt; A::push_value(ctxt, field.shift()),
+            <span class="prelude-val">Ok</span>(Either::Right(ctxt)) =&gt; B::push_value(ctxt, field.shift()),
+            <span class="prelude-val">Err</span>(e) =&gt; ctxt.errors.push(e),
+        }
+    }
+
+    <span class="comment">// This is identical to `push_value` but for data fields.
+    </span><span class="kw">async fn </span>push_data(ctxt: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Context, field: DataField&lt;<span class="lifetime">&#39;v</span>, <span class="lifetime">&#39;_</span>&gt;) {
+        <span class="kw">match </span>ctxt.context(field.name) {
+            <span class="prelude-val">Ok</span>(Either::Left(ctxt)) =&gt; A::push_data(ctxt, field.shift()).<span class="kw">await</span>,
+            <span class="prelude-val">Ok</span>(Either::Right(ctxt)) =&gt; B::push_data(ctxt, field.shift()).<span class="kw">await</span>,
+            <span class="prelude-val">Err</span>(e) =&gt; ctxt.errors.push(e),
+        }
+    }
+
+    <span class="comment">// Finally, we finalize `A` and `B`. If both returned `Ok` and we
+    // encountered no errors during the push phase, we return our pair. If
+    // there were errors, we return them. If `A` and/or `B` failed, we
+    // return the commulative errors.
+    </span><span class="kw">fn </span>finalize(<span class="kw-2">mut </span>ctxt: <span class="self">Self</span>::Context) -&gt; form::Result&lt;<span class="lifetime">&#39;v</span>, <span class="self">Self</span>&gt; {
+        <span class="kw">match </span>(A::finalize(ctxt.left), B::finalize(ctxt.right)) {
+            (<span class="prelude-val">Ok</span>(l), <span class="prelude-val">Ok</span>(r)) <span class="kw">if </span>ctxt.errors.is_empty() =&gt; <span class="prelude-val">Ok</span>(Pair(l, r)),
+            (<span class="prelude-val">Ok</span>(<span class="kw">_</span>), <span class="prelude-val">Ok</span>(<span class="kw">_</span>)) =&gt; <span class="prelude-val">Err</span>(ctxt.errors),
+            (left, right) =&gt; {
+                <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = left { ctxt.errors.extend(e); }
+                <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = right { ctxt.errors.extend(e); }
+                <span class="prelude-val">Err</span>(ctxt.errors)
+            }
+        }
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;v</span>, A: FromForm&lt;<span class="lifetime">&#39;v</span>&gt;, B: FromForm&lt;<span class="lifetime">&#39;v</span>&gt;&gt; PairContext&lt;<span class="lifetime">&#39;v</span>, A, B&gt; {
+    <span class="comment">// Helper method used by `push_{value, data}`. Determines which context
+    // we should push to based on the field name&#39;s key. If the key is
+    // neither `0` nor `1`, we return an error.
+    </span><span class="kw">fn </span>context(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        name: form::name::NameView&lt;<span class="lifetime">&#39;v</span>&gt;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Either&lt;<span class="kw-2">&amp;mut </span>A::Context, <span class="kw-2">&amp;mut </span>B::Context&gt;, Error&lt;<span class="lifetime">&#39;v</span>&gt;&gt; {
+        <span class="kw">use </span>std::borrow::Cow;
+
+        <span class="kw">match </span>name.key().map(|k| k.as_str()) {
+            <span class="prelude-val">Some</span>(<span class="string">&quot;0&quot;</span>) =&gt; <span class="prelude-val">Ok</span>(Either::Left(<span class="kw-2">&amp;mut </span><span class="self">self</span>.left)),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;1&quot;</span>) =&gt; <span class="prelude-val">Ok</span>(Either::Right(<span class="kw-2">&amp;mut </span><span class="self">self</span>.right)),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(Error::from(<span class="kw-2">&amp;</span>[Cow::Borrowed(<span class="string">&quot;0&quot;</span>), Cow::Borrowed(<span class="string">&quot;1&quot;</span>)])
+                .with_entity(form::error::Entity::Index(<span class="number">0</span>))
+                .with_name(name)),
+        }
+    }
+}</code></pre></div>
+</div></details><h2 id="required-associated-types" class="small-section-header">Required Associated Types<a href="#required-associated-types" class="anchor">§</a></h2><div class="methods"><details class="toggle" open><summary><section id="associatedtype.Context" class="method has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#524">source</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a>: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a></h4></section></summary><div class="docblock"><p>The form guard’s parsing context.</p>
+</div></details></div><h2 id="required-methods" class="small-section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.init" class="method has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#527">source</a><h4 class="code-header">fn <a href="#tymethod.init" class="fn">init</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section></summary><div class="docblock"><p>Initializes and returns the parsing context for <code>Self</code>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.push_value" class="method has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#530">source</a><h4 class="code-header">fn <a href="#tymethod.push_value" class="fn">push_value</a>(ctxt: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, field: <a class="struct" href="struct.ValueField.html" title="struct rocket::form::ValueField">ValueField</a>&lt;'r&gt;)</h4></section></summary><div class="docblock"><p>Processes the value field <code>field</code>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.push_data" class="method has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#533">source</a><h4 class="code-header">fn <a href="#tymethod.push_data" class="fn">push_data</a>&lt;'life0, 'life1, 'async_trait&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;ctxt: &amp;'life0 mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;field: <a class="struct" href="struct.DataField.html" title="struct rocket::form::DataField">DataField</a>&lt;'r, 'life1&gt;<br>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'r: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life0: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life1: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Processes the data field <code>field</code>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.finalize" class="method has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#542">source</a><h4 class="code-header">fn <a href="#tymethod.finalize" class="fn">finalize</a>(ctxt: Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>) -&gt; <a class="type" href="type.Result.html" title="type rocket::form::Result">Result</a>&lt;'r, Self&gt;</h4></section></summary><div class="docblock"><p>Finalizes parsing. Returns the parsed value when successful or
+collection of <a href="struct.Errors.html" title="Errors"><code>Errors</code></a> otherwise.</p>
+</div></details></div><h2 id="provided-methods" class="small-section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.push_error" class="method has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#538">source</a><h4 class="code-header">fn <a href="#method.push_error" class="fn">push_error</a>(_ctxt: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, _error: <a class="struct" href="struct.Error.html" title="struct rocket::form::Error">Error</a>&lt;'r&gt;)</h4></section></summary><div class="docblock"><p>Processes the external form or field error <code>_error</code>.</p>
+<p>The default implementation does nothing, which is always correct.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="method.default" class="method has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#551-553">source</a><h4 class="code-header">fn <a href="#method.default" class="fn">default</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Self&gt;</h4></section></summary><div class="docblock"><p>Returns a default value, if any, to use when a value is desired and
+parsing fails.</p>
+<p>The default implementation initializes <code>Self</code> with <code>opts</code> and finalizes
+immediately, returning the value if finalization succeeds. This is
+always correct and should likely not be changed. Returning a different
+value may result in ambiguous parses.</p>
+</div></details></div><h2 id="foreign-impls" class="small-section-header">Implementations on Foreign Types<a href="#foreign-impls" class="anchor">§</a></h2><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-Vec%3CT%3E" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#603-628">source</a><a href="#impl-FromForm%3C%27v%3E-for-Vec%3CT%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'v, T:&nbsp;<a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; + 'v&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;T&gt;</h3></section></summary><div class="impl-items"><section id="associatedtype.Context-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-1" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = VecContext&lt;'v, T&gt;</h4></section><section id="method.init" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#606-608">source</a><a href="#method.init" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.init" class="fn">init</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section><section id="method.push_value" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#610-612">source</a><a href="#method.push_value" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_value" class="fn">push_value</a>(this: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, field: <a class="struct" href="struct.ValueField.html" title="struct rocket::form::ValueField">ValueField</a>&lt;'v&gt;)</h4></section><section id="method.push_data" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#614-616">source</a><a href="#method.push_data" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_data" class="fn">push_data</a>&lt;'life0, 'life1, 'async_trait&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;this: &amp;'life0 mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;field: <a class="struct" href="struct.DataField.html" title="struct rocket::form::DataField">DataField</a>&lt;'v, 'life1&gt;<br>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'v: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life0: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life1: 'async_trait,</span></h4></section><section id="method.finalize" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#618-627">source</a><a href="#method.finalize" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.finalize" class="fn">finalize</a>(this: Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>) -&gt; <a class="type" href="type.Result.html" title="type rocket::form::Result">Result</a>&lt;'v, Self&gt;</h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-HashMap%3CK%2C%20V%3E" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#760-780">source</a><a href="#impl-FromForm%3C%27v%3E-for-HashMap%3CK%2C%20V%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'v, K, V&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="struct" href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html" title="struct std::collections::hash::map::HashMap">HashMap</a>&lt;K, V&gt;<span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;K: <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;,</span></h3></section></summary><div class="impl-items"><section id="associatedtype.Context-2" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-2" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = MapContext&lt;'v, K, V&gt;</h4></section><section id="method.init-1" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#765-767">source</a><a href="#method.init-1" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.init" class="fn">init</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section><section id="method.push_value-1" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#769-771">source</a><a href="#method.push_value-1" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_value" class="fn">push_value</a>(ctxt: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, field: <a class="struct" href="struct.ValueField.html" title="struct rocket::form::ValueField">ValueField</a>&lt;'v&gt;)</h4></section><section id="method.push_data-1" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#773-775">source</a><a href="#method.push_data-1" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_data" class="fn">push_data</a>&lt;'life0, 'life1, 'async_trait&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;ctxt: &amp;'life0 mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;field: <a class="struct" href="struct.DataField.html" title="struct rocket::form::DataField">DataField</a>&lt;'v, 'life1&gt;<br>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'v: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life0: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life1: 'async_trait,</span></h4></section><section id="method.finalize-1" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#777-779">source</a><a href="#method.finalize-1" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.finalize" class="fn">finalize</a>(this: Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>) -&gt; <a class="type" href="type.Result.html" title="type rocket::form::Result">Result</a>&lt;'v, Self&gt;</h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-BTreeMap%3CK%2C%20V%3E" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#783-803">source</a><a href="#impl-FromForm%3C%27v%3E-for-BTreeMap%3CK%2C%20V%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'v, K, V&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/collections/btree/map/struct.BTreeMap.html" title="struct alloc::collections::btree::map::BTreeMap">BTreeMap</a>&lt;K, V&gt;<span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;K: <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html" title="trait core::cmp::Ord">Ord</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;,</span></h3></section></summary><div class="impl-items"><section id="associatedtype.Context-3" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-3" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = MapContext&lt;'v, K, V&gt;</h4></section><section id="method.init-2" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#788-790">source</a><a href="#method.init-2" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.init" class="fn">init</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section><section id="method.push_value-2" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#792-794">source</a><a href="#method.push_value-2" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_value" class="fn">push_value</a>(ctxt: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, field: <a class="struct" href="struct.ValueField.html" title="struct rocket::form::ValueField">ValueField</a>&lt;'v&gt;)</h4></section><section id="method.push_data-2" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#796-798">source</a><a href="#method.push_data-2" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_data" class="fn">push_data</a>&lt;'life0, 'life1, 'async_trait&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;ctxt: &amp;'life0 mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;field: <a class="struct" href="struct.DataField.html" title="struct rocket::form::DataField">DataField</a>&lt;'v, 'life1&gt;<br>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'v: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life0: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life1: 'async_trait,</span></h4></section><section id="method.finalize-2" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#800-802">source</a><a href="#method.finalize-2" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.finalize" class="fn">finalize</a>(this: Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>) -&gt; <a class="type" href="type.Result.html" title="type rocket::form::Result">Result</a>&lt;'v, Self&gt;</h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-Option%3CT%3E" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#806-824">source</a><a href="#impl-FromForm%3C%27v%3E-for-Option%3CT%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'v, T:&nbsp;<a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T&gt;</h3></section></summary><div class="impl-items"><section id="associatedtype.Context-4" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-4" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = &lt;T as <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt;::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section><section id="method.init-3" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#809-811">source</a><a href="#method.init-3" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.init" class="fn">init</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section><section id="method.push_value-3" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#813-815">source</a><a href="#method.push_value-3" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_value" class="fn">push_value</a>(ctxt: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, field: <a class="struct" href="struct.ValueField.html" title="struct rocket::form::ValueField">ValueField</a>&lt;'v&gt;)</h4></section><section id="method.push_data-3" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#817-819">source</a><a href="#method.push_data-3" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_data" class="fn">push_data</a>&lt;'life0, 'life1, 'async_trait&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;ctxt: &amp;'life0 mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;field: <a class="struct" href="struct.DataField.html" title="struct rocket::form::DataField">DataField</a>&lt;'v, 'life1&gt;<br>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'v: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life0: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life1: 'async_trait,</span></h4></section><section id="method.finalize-3" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#821-823">source</a><a href="#method.finalize-3" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.finalize" class="fn">finalize</a>(this: Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>) -&gt; <a class="type" href="type.Result.html" title="type rocket::form::Result">Result</a>&lt;'v, Self&gt;</h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-(A%2C%20B)" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#870-908">source</a><a href="#impl-FromForm%3C%27v%3E-for-(A%2C%20B)" class="anchor">§</a><h3 class="code-header">impl&lt;'v, A:&nbsp;<a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;, B:&nbsp;<a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(A, B)</a></h3></section></summary><div class="impl-items"><section id="associatedtype.Context-5" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-5" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = PairContext&lt;'v, A, B&gt;</h4></section><section id="method.init-4" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#873-879">source</a><a href="#method.init-4" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.init" class="fn">init</a>(opts: <a class="struct" href="struct.Options.html" title="struct rocket::form::Options">Options</a>) -&gt; Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section><section id="method.push_value-4" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#881-887">source</a><a href="#method.push_value-4" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_value" class="fn">push_value</a>(ctxt: &amp;mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, field: <a class="struct" href="struct.ValueField.html" title="struct rocket::form::ValueField">ValueField</a>&lt;'v&gt;)</h4></section><section id="method.push_data-4" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#889-895">source</a><a href="#method.push_data-4" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.push_data" class="fn">push_data</a>&lt;'life0, 'life1, 'async_trait&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;ctxt: &amp;'life0 mut Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;field: <a class="struct" href="struct.DataField.html" title="struct rocket::form::DataField">DataField</a>&lt;'v, 'life1&gt;<br>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'v: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life0: 'async_trait,<br>&nbsp;&nbsp;&nbsp;&nbsp;'life1: 'async_trait,</span></h4></section><section id="method.finalize-4" class="method trait-impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#897-907">source</a><a href="#method.finalize-4" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.finalize" class="fn">finalize</a>(ctxt: Self::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>) -&gt; <a class="type" href="type.Result.html" title="type rocket::form::Result">Result</a>&lt;'v, Self&gt;</h4></section></div></details><h2 id="implementors" class="small-section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-Contextual%3C%27v%2C%20T%3E" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/context.rs.html#365-397">source</a><a href="#impl-FromForm%3C%27v%3E-for-Contextual%3C%27v%2C%20T%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'v, T:&nbsp;<a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="struct" href="struct.Contextual.html" title="struct rocket::form::Contextual">Contextual</a>&lt;'v, T&gt;</h3></section></summary><div class="impl-items"><section id="associatedtype.Context-6" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-6" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = (&lt;T as <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt;::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a>, <a class="struct" href="struct.Context.html" title="struct rocket::form::Context">Context</a>&lt;'v&gt;)</h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-Lenient%3CT%3E" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/lenient.rs.html#77-99">source</a><a href="#impl-FromForm%3C%27v%3E-for-Lenient%3CT%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'v, T:&nbsp;<a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="struct" href="struct.Lenient.html" title="struct rocket::form::Lenient">Lenient</a>&lt;T&gt;</h3></section></summary><div class="impl-items"><section id="associatedtype.Context-7" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-7" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = &lt;T as <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt;::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-Strict%3CT%3E" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/strict.rs.html#92-114">source</a><a href="#impl-FromForm%3C%27v%3E-for-Strict%3CT%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'v, T:&nbsp;<a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="struct" href="struct.Strict.html" title="struct rocket::form::Strict">Strict</a>&lt;T&gt;</h3></section></summary><div class="impl-items"><section id="associatedtype.Context-8" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-8" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = &lt;T as <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt;::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-Result%3C%27v%2C%20T%3E" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form.rs.html#827-845">source</a><a href="#impl-FromForm%3C%27v%3E-for-Result%3C%27v%2C%20T%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'v, T:&nbsp;<a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for <a class="type" href="type.Result.html" title="type rocket::form::Result">Result</a>&lt;'v, T&gt;</h3></section></summary><div class="impl-items"><section id="associatedtype.Context-9" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-9" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = &lt;T as <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt;&gt;::<a class="associatedtype" href="trait.FromForm.html#associatedtype.Context" title="type rocket::form::FromForm::Context">Context</a></h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-FromForm%3C%27v%3E-for-T" class="impl has-srclink"><a class="srclink rightside" href="../../src/rocket/form/from_form_field.rs.html#218-266">source</a><a href="#impl-FromForm%3C%27v%3E-for-T" class="anchor">§</a><h3 class="code-header">impl&lt;'v, T:&nbsp;<a class="trait" href="trait.FromFormField.html" title="trait rocket::form::FromFormField">FromFormField</a>&lt;'v&gt;&gt; <a class="trait" href="trait.FromForm.html" title="trait rocket::form::FromForm">FromForm</a>&lt;'v&gt; for T</h3></section></summary><div class="impl-items"><section id="associatedtype.Context-10" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Context-10" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Context" class="associatedtype">Context</a> = FromFieldContext&lt;'v, T&gt;</h4></section></div></details></div><script src="../../implementors/rocket/form/from_form/trait.FromForm.js" data-ignore-extern-crates="alloc,std,core" async></script></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="rocket" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (c18a5e8a5 2023-01-25)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-a43118d2dfb2799d.js" data-settings-css="settings-7c23ac01f615ce90.css" ></div></body></html>

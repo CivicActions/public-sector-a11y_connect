@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["enum_default",""],["enum_null",""],["field_default",""],["fields_default",""],["fields_null",""],["input_default",""],["struct_default",""],["variant_default",""]],"struct":[["MapperBuild",""]],"trait":[["Mapper",""]]};

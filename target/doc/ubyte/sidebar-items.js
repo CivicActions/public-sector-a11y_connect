@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Error","Parsing error, as returned by `ByteUnit::from_str()`."]],"struct":[["ByteUnit","A unit of bytes with saturating `const` constructors and arithmetic."]],"trait":[["ToByteUnit","Extension trait for conversion from integer types to [`ByteUnit`]."]]};

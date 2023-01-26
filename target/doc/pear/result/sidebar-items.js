@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"type":[["Result","An alias to a Result where:"]]};

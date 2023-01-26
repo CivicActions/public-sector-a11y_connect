@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Entity","The erranous form entity or form component."],["ErrorKind","The kind of form error that occurred."]],"struct":[["Error","A form error, potentially tied to a specific form field."],["Errors","A collection of [`Error`]s."]]};

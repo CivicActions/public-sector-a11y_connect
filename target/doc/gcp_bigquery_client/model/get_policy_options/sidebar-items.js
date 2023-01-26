@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["GetPolicyOptions","GetPolicyOptions : Encapsulates settings provided to GetIamPolicy."]]};

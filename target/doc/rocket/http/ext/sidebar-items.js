@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"trait":[["IntoCollection","Trait implemented by types that can be converted into a collection."],["IntoOwned","Trait implemented by types that can be converted into owned versions of themselves."]]};

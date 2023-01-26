@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="The `inlinable_string` crate provides the `InlinableString` type — an owned, grow-able UTF-8 string that stores small strings inline and avoids heap-allocation — and the `StringExt` trait which abstracts string operations over both `std::string::String` and `InlinableString` (or even your own custom string type)."><meta name="keywords" content="rust, rustlang, rust-lang, inlinable_string"><title>inlinable_string - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-6d262342be62306e.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../static.files/light-5f7299aa2b503fb1.css"><link rel="stylesheet" disabled href="../static.files/dark-dfb18ef8114bb428.css"><link rel="stylesheet" disabled href="../static.files/ayu-4047a6aaddd3789d.css"><script id="default-settings" ></script><script src="../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../inlinable_string/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../inlinable_string/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Crate inlinable_string</a></h2><div class="sidebar-elems"><ul class="block"><li class="version">Version 0.1.15</li><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#enums">Enums</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">inlinable_string</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/inlinable_string/lib.rs.html#9-1018">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>The <code>inlinable_string</code> crate provides the
+<a href="./enum.InlinableString.html"><code>InlinableString</code></a> type — an owned,
+grow-able UTF-8 string that stores small strings inline and avoids
+heap-allocation — and the
+<a href="./string_ext/trait.StringExt.html"><code>StringExt</code></a> trait which abstracts
+string operations over both <code>std::string::String</code> and <code>InlinableString</code> (or
+even your own custom string type).</p>
+<p><code>StringExt</code>’s API is mostly identical to <code>std::string::String</code>; unstable and
+deprecated methods are not included. A <code>StringExt</code> implementation is
+provided for both <code>std::string::String</code> and <code>InlinableString</code>. This enables
+<code>InlinableString</code> to generally work as a drop-in replacement for
+<code>std::string::String</code> and <code>&amp;StringExt</code> to work with references to either
+type.</p>
+<h2 id="examples"><a href="#examples">Examples</a></h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>inlinable_string::{InlinableString, StringExt};
+
+<span class="comment">// Small strings are stored inline and don&#39;t perform heap-allocation.
+</span><span class="kw">let </span><span class="kw-2">mut </span>s = InlinableString::from(<span class="string">&quot;small&quot;</span>);
+<span class="macro">assert_eq!</span>(s.capacity(), inlinable_string::INLINE_STRING_CAPACITY);
+
+<span class="comment">// Inline strings are transparently promoted to heap-allocated strings when
+// they grow too big.
+</span>s.push_str(<span class="string">&quot;a really long string that&#39;s bigger than `INLINE_STRING_CAPACITY`&quot;</span>);
+<span class="macro">assert!</span>(s.capacity() &gt; inlinable_string::INLINE_STRING_CAPACITY);
+
+<span class="comment">// This method can work on strings potentially stored inline on the stack,
+// on the heap, or plain old `std::string::String`s!
+</span><span class="kw">fn </span>takes_a_string_reference(string: <span class="kw-2">&amp;mut </span>StringExt) {
+   <span class="comment">// Do something with the string...
+   </span>string.push_str(<span class="string">&quot;it works!&quot;</span>);
+}
+
+<span class="kw">let </span><span class="kw-2">mut </span>s1 = String::from(<span class="string">&quot;this is a plain std::string::String&quot;</span>);
+<span class="kw">let </span><span class="kw-2">mut </span>s2 = InlinableString::from(<span class="string">&quot;inline&quot;</span>);
+
+<span class="comment">// Both work!
+</span>takes_a_string_reference(<span class="kw-2">&amp;mut </span>s1);
+takes_a_string_reference(<span class="kw-2">&amp;mut </span>s2);</code></pre></div>
+<h2 id="porting-your-code"><a href="#porting-your-code">Porting Your Code</a></h2>
+<ul>
+<li>
+<p>If <code>my_string</code> is always on the stack: <code>let my_string = String::new();</code> →
+<code>let my_string = InlinableString::new();</code></p>
+</li>
+<li>
+<p><code>fn foo(string: &amp;mut String) { ... }</code> → <code>fn foo(string: &amp;mut StringExt) { ... }</code></p>
+</li>
+<li>
+<p><code>fn foo(string: &amp;str) { ... }</code> does not need to be modified.</p>
+</li>
+<li>
+<p><code>struct S { member: String }</code> is a little trickier. If <code>S</code> is always stack
+allocated, it probably makes sense to make <code>member</code> be of type
+<code>InlinableString</code>. If <code>S</code> is heap-allocated and <code>member</code> is <em>always</em> small,
+consider using the more restrictive
+<a href="./inline_string/struct.InlineString.html"><code>InlineString</code></a> type. If <code>member</code> is
+not always small, then it should probably be left as a <code>String</code>.</p>
+</li>
+</ul>
+<h2 id="serialization"><a href="#serialization">Serialization</a></h2>
+<p><code>InlinableString</code> implements <a href="https://serde.rs"><code>serde</code></a>’s <code>Serialize</code> and <code>Deserialize</code> traits.
+Add the <code>serde</code> feature to your <code>Cargo.toml</code> to enable serialization.</p>
+</div></details><h2 id="reexports" class="small-section-header"><a href="#reexports">Re-exports</a></h2><div class="item-table"><div class="item-row"><div class="item-left import-item" id="reexport.InlineString"><code>pub use inline_string::<a class="struct" href="inline_string/struct.InlineString.html" title="struct inlinable_string::inline_string::InlineString">InlineString</a>;</code></div></div><div class="item-row"><div class="item-left import-item" id="reexport.INLINE_STRING_CAPACITY"><code>pub use inline_string::<a class="constant" href="inline_string/constant.INLINE_STRING_CAPACITY.html" title="constant inlinable_string::inline_string::INLINE_STRING_CAPACITY">INLINE_STRING_CAPACITY</a>;</code></div></div><div class="item-row"><div class="item-left import-item" id="reexport.StringExt"><code>pub use string_ext::<a class="trait" href="string_ext/trait.StringExt.html" title="trait inlinable_string::string_ext::StringExt">StringExt</a>;</code></div></div></div><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="inline_string/index.html" title="inlinable_string::inline_string mod">inline_string</a></div><div class="item-right docblock-short">A short UTF-8 string that uses inline storage and does no heap
+allocation. It may be no longer than <code>INLINE_STRING_CAPACITY</code> bytes long.</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="string_ext/index.html" title="inlinable_string::string_ext mod">string_ext</a></div><div class="item-right docblock-short">A trait that exists to abstract string operations over any number of
+concrete string type implementations.</div></div></div><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.InlinableString.html" title="inlinable_string::InlinableString enum">InlinableString</a></div><div class="item-right docblock-short">An owned, grow-able UTF-8 string that allocates short strings inline on the
+stack.</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="inlinable_string" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (c18a5e8a5 2023-01-25)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-a43118d2dfb2799d.js" data-settings-css="settings-7c23ac01f615ce90.css" ></div></body></html>

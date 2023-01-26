@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Macro to automatically generate identity `FromUriParam` trait implementations."><meta name="keywords" content="rust, rustlang, rust-lang, impl_from_uri_param_identity"><title>impl_from_uri_param_identity in rocket_http - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-6d262342be62306e.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../static.files/light-5f7299aa2b503fb1.css"><link rel="stylesheet" disabled href="../static.files/dark-dfb18ef8114bb428.css"><link rel="stylesheet" disabled href="../static.files/ayu-4047a6aaddd3789d.css"><script id="default-settings" ></script><script src="../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../rocket_http/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../rocket_http/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><div class="sidebar-elems"><h2><a href="index.html">In rocket_http</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Macro <a href="index.html">rocket_http</a>::<wbr><a class="macro" href="#">impl_from_uri_param_identity</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/rocket_http/uri/fmt/from_uri_param.rs.html#278-283">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><div class="item-decl"><div class="example-wrap"><pre class="rust macro"><code><span class="macro">macro_rules! </span>impl_from_uri_param_identity {
+    ($(($(<span class="macro-nonterminal">$l</span>:tt)<span class="kw-2">*</span>) <span class="macro-nonterminal">$T</span>:ty),* $(,)<span class="question-mark">?</span>) =&gt; { ... };
+    ($([<span class="macro-nonterminal">$P</span>:ty] ($(<span class="macro-nonterminal">$l</span>:tt)<span class="kw-2">*</span>) <span class="macro-nonterminal">$T</span>:ty),* $(,)<span class="question-mark">?</span>) =&gt; { ... };
+    ($([<span class="macro-nonterminal">$P</span>:ty] <span class="macro-nonterminal">$T</span>:ty),* $(,)<span class="question-mark">?</span>) =&gt; { ... };
+    ($(<span class="macro-nonterminal">$T</span>:ty),* $(,)<span class="question-mark">?</span>) =&gt; { ... };
+}</code></pre></div>
+</div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Macro to automatically generate <em>identity</em> <a href="uri/fmt/trait.FromUriParam.html"><code>FromUriParam</code></a> trait
+implementations.</p>
+<p>For a type <code>T</code>, the <em>identity</em> implementations of <code>FromUriParam</code> are:</p>
+<ul>
+<li><code>impl&lt;P: Part&gt; FromUriParam&lt;P, T&gt; for T</code></li>
+<li><code>impl&lt;'x&gt; FromUriParam&lt;P, &amp;'x T&gt; for T</code></li>
+<li><code>impl&lt;'x&gt; FromUriParam&lt;P, &amp;'x mut T&gt; for T</code></li>
+</ul>
+<p>where <code>P</code> is one of:</p>
+<ul>
+<li><code>P: Part</code> (the generic <code>P</code>)</li>
+<li><a href="uri/fmt/enum.Path.html"><code>Path</code></a></li>
+<li><a href="uri/fmt/enum.Query.html"><code>Query</code></a></li>
+</ul>
+<p>This macro can be invoked in four ways:</p>
+<ol>
+<li>
+<p><code>impl_from_uri_param_identity!(Type);</code></p>
+<p>Generates the three <em>identity</em> implementations for the generic <code>P</code>.</p>
+<ul>
+<li>Example: <code>impl_from_uri_param_identity!(MyType);</code></li>
+<li>Generates: <code>impl&lt;P: Part&gt; FromUriParam&lt;P, _&gt; for MyType { ... }</code></li>
+</ul>
+</li>
+<li>
+<p><code>impl_from_uri_param_identity!((generics*) Type);</code></p>
+<p>Generates the three <em>identity</em> implementations for the generic <code>P</code>,
+adding the tokens <code>generics</code> to the <code>impl</code> generics of the generated
+implementation.</p>
+<ul>
+<li>Example: <code>impl_from_uri_param_identity!(('a) MyType&lt;'a&gt;);</code></li>
+<li>Generates: <code>impl&lt;'a, P: Part&gt; FromUriParam&lt;P, _&gt; for MyType&lt;'a&gt; { ... }</code></li>
+</ul>
+</li>
+<li>
+<p><code>impl_from_uri_param_identity!([Part] Type);</code></p>
+<p>Generates the three <em>identity</em> implementations for the <code>Part</code>
+<code>Part</code>, where <code>Part</code> is a path to <a href="uri/fmt/enum.Path.html"><code>Path</code></a> or <a href="uri/fmt/enum.Query.html"><code>Query</code></a>.</p>
+<ul>
+<li>Example: <code>impl_from_uri_param_identity!([Path] MyType);</code></li>
+<li>Generates: <code>impl FromUriParam&lt;Path, _&gt; for MyType { ... }</code></li>
+</ul>
+</li>
+<li>
+<p><code>impl_from_uri_param_identity!([Part] (generics*) Type);</code></p>
+<p>See 2 and 3.</p>
+<ul>
+<li>Example: <code>impl_from_uri_param_identity!([Path] ('a) MyType&lt;'a&gt;);</code></li>
+<li>Generates: <code>impl&lt;'a&gt; FromUriParam&lt;Path, _&gt; for MyType&lt;'a&gt; { ... }</code></li>
+</ul>
+</li>
+</ol>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="rocket_http" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (c18a5e8a5 2023-01-25)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-a43118d2dfb2799d.js" data-settings-css="settings-7c23ac01f615ce90.css" ></div></body></html>

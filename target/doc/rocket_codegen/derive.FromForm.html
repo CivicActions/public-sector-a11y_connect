@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Derive for the `FromForm` trait."><meta name="keywords" content="rust, rustlang, rust-lang, FromForm"><title>FromForm in rocket_codegen - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-6d262342be62306e.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../static.files/light-5f7299aa2b503fb1.css"><link rel="stylesheet" disabled href="../static.files/dark-dfb18ef8114bb428.css"><link rel="stylesheet" disabled href="../static.files/ayu-4047a6aaddd3789d.css"><script id="default-settings" ></script><script src="../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="icon" href="https://rocket.rs/images/favicon.ico"></head><body class="rustdoc derive"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../rocket_codegen/index.html"><img src="https://rocket.rs/images/logo-boxed.png" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../rocket_codegen/index.html">
+                <img src="https://rocket.rs/images/logo-boxed.png" alt="logo"></a><div class="sidebar-elems"><h2><a href="index.html">In rocket_codegen</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Derive Macro <a href="index.html">rocket_codegen</a>::<wbr><a class="derive" href="#">FromForm</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/rocket_codegen/lib.rs.html#747-749">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><div class="item-decl"><pre class="rust"><code>#[derive(FromForm)]
+{
+    // Attributes available to this derive:
+    #[form]
+    #[field]
+}
+</code></pre></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Derive for the <a href="../rocket/form/trait.FromForm.html"><code>FromForm</code></a> trait.</p>
+<p>The <a href="../rocket/form/trait.FromForm.html"><code>FromForm</code></a> derive can be applied to structures with named or unnamed
+fields:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::FromForm;
+
+<span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>MyStruct&lt;<span class="lifetime">&#39;r</span>&gt; {
+    field: usize,
+    <span class="attr">#[field(name = <span class="string">&quot;renamed_field&quot;</span>)]
+    #[field(name = uncased(<span class="string">&quot;RenamedField&quot;</span>))]
+    </span>other: <span class="kw-2">&amp;</span><span class="lifetime">&#39;r </span>str,
+    <span class="attr">#[field(validate = range(<span class="number">1</span>..), default = <span class="number">3</span>)]
+    </span>r#type: usize,
+    <span class="attr">#[field(default = <span class="prelude-val">None</span>)]
+    </span>is_nice: bool,
+}
+
+<span class="attr">#[derive(FromForm)]
+#[field(validate = len(<span class="number">6</span>..))]
+#[field(validate = neq(<span class="string">&quot;password&quot;</span>))]
+</span><span class="kw">struct </span>Password&lt;<span class="lifetime">&#39;r</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;r </span>str);</code></pre></div>
+<p>Each field type is required to implement <a href="../rocket/form/trait.FromForm.html"><code>FromForm</code></a>.</p>
+<p>The derive generates an implementation of the <a href="../rocket/form/trait.FromForm.html"><code>FromForm</code></a> trait.</p>
+<p><strong>Named Fields</strong></p>
+<p>If the structure has named fields, the implementation parses a form whose
+field names match the field names of the structure on which the derive was
+applied. Each field’s value is parsed with the <a href="../rocket/form/trait.FromForm.html"><code>FromForm</code></a> implementation
+of the field’s type. The <code>FromForm</code> implementation succeeds only when all
+fields parse successfully or return a default. Errors are collected into a
+<a href="../rocket/form/struct.Errors.html"><code>form::Errors</code></a> and returned if non-empty after parsing all fields.</p>
+<p><strong>Unnamed Fields</strong></p>
+<p>If the structure is a tuple struct, it must have exactly one field. The
+implementation parses a form exactly when the internal field parses a form
+<em>and</em> any <code>#[field]</code> validations succeed.</p>
+<h3 id="syntax"><a href="#syntax">Syntax</a></h3>
+<p>The derive accepts one field attribute: <code>field</code>, and one container
+attribute, <code>form</code>, with the following syntax:</p>
+<div class="example-wrap"><pre class="language-text"><code>field := name? default? validate*
+
+name := &#39;name&#39; &#39;=&#39; name_val &#39;,&#39;?
+name_val :=  &#39;&quot;&#39; FIELD_NAME &#39;&quot;&#39;
+         | &#39;uncased(&#39; &#39;&quot;&#39; FIELD_NAME &#39;&quot;&#39; &#39;)
+
+default := &#39;default&#39; &#39;=&#39; EXPR &#39;,&#39;?
+         | &#39;default_with&#39; &#39;=&#39; EXPR &#39;,&#39;?
+
+validate := &#39;validate&#39; &#39;=&#39; EXPR &#39;,&#39;?
+
+FIELD_NAME := valid field name, according to the HTML5 spec
+EXPR := valid expression, as defined by Rust
+</code></pre></div>
+<p><code>#[field]</code> can be applied any number of times on a field. <code>default</code> and
+<code>default_with</code> are mutually exclusive: at most <em>one</em> of <code>default</code> or
+<code>default_with</code> can be present per field.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>MyStruct {
+    <span class="attr">#[field(name = uncased(<span class="string">&quot;number&quot;</span>))]
+    #[field(default = <span class="number">42</span>)]
+    </span>field: usize,
+    <span class="attr">#[field(name = <span class="string">&quot;renamed_field&quot;</span>)]
+    #[field(name = uncased(<span class="string">&quot;anotherName&quot;</span>))]
+    #[field(validate = eq(<span class="string">&quot;banana&quot;</span>))]
+    #[field(validate = neq(<span class="string">&quot;orange&quot;</span>))]
+    </span>other: String
+}</code></pre></div>
+<p>For tuples structs, the <code>field</code> attribute can be applied to the structure
+itself:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(FromForm)]
+#[field(default = <span class="number">42</span>, validate = eq(<span class="number">42</span>))]
+</span><span class="kw">struct </span>Meaning(usize);</code></pre></div>
+<h3 id="field-attribute-parameters"><a href="#field-attribute-parameters">Field Attribute Parameters</a></h3>
+<ul>
+<li>
+<p><strong><code>name</code></strong></p>
+<p>A <code>name</code> attribute changes the name to match against when parsing the
+form field. The value is either an exact string to match against
+(<code>&quot;foo&quot;</code>), or <code>uncased(&quot;foo&quot;)</code>, which causes the match to be
+case-insensitive but case-preserving. When more than one <code>name</code>
+attribute is applied, the field will match against <em>any</em> of the names.</p>
+</li>
+<li>
+<p><strong><code>validate = expr</code></strong></p>
+<p>The validation <code>expr</code> is run if the field type parses successfully. The
+expression must return a value of type <code>Result&lt;(), form::Errors&gt;</code>. On
+<code>Err</code>, the errors are added to the thus-far collected errors. If more
+than one <code>validate</code> attribute is applied, <em>all</em> validations are run.</p>
+</li>
+<li>
+<p><strong><code>default = expr</code></strong></p>
+<p>If <code>expr</code> is not literally <code>None</code>, the parameter sets the default value
+of the field to be <code>expr.into()</code>. If <code>expr</code> <em>is</em> <code>None</code>, the parameter
+<em>unsets</em> the default value of the field, if any. The expression is only
+evaluated if the attributed field is missing in the incoming form.</p>
+<p>Except when <code>expr</code> is <code>None</code>, <code>expr</code> must be of type <code>T: Into&lt;F&gt;</code> where
+<code>F</code> is the field’s type.</p>
+</li>
+<li>
+<p><strong><code>default_with = expr</code></strong></p>
+<p>The parameter sets the default value of the field to be exactly <code>expr</code>
+which must be of type <code>Option&lt;F&gt;</code> where <code>F</code> is the field’s type. If the
+expression evaluates to <code>None</code>, there is no default. Otherwise the value
+wrapped in <code>Some</code> is used. The expression is only evaluated if the
+attributed field is missing in the incoming form.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::num::NonZeroUsize;
+
+<span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>MyForm {
+    <span class="comment">// `NonZeroUsize::new()` return an `Option&lt;NonZeroUsize&gt;`.
+    </span><span class="attr">#[field(default_with = NonZeroUsize::new(<span class="number">42</span>))]
+    </span>num: NonZeroUsize,
+}</code></pre></div>
+</li>
+</ul>
+<h2 id="generics"><a href="#generics">Generics</a></h2>
+<p>The derive accepts any number of type generics and at most one lifetime
+generic. If a type generic is present, the generated implementation will
+require a bound of <code>FromForm&lt;'r&gt;</code> for the field type containing the generic.
+For example, for a struct <code>struct Foo&lt;T&gt;(Json&lt;T&gt;)</code>, the bound <code>Json&lt;T&gt;: FromForm&lt;'r&gt;</code> will be added to the generated implementation.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::FromForm;
+<span class="kw">use </span>rocket::serde::json::Json;
+
+<span class="comment">// The bounds `A: FromForm&lt;&#39;r&gt;`, `B: FromForm&lt;&#39;r&gt;` will be required.
+</span><span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>FancyForm&lt;A, B&gt; {
+    first: A,
+    second: B,
+};
+
+<span class="comment">// The bound `Json&lt;T&gt;: FromForm&lt;&#39;r&gt;` will be required.
+</span><span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>JsonToken&lt;T&gt; {
+    token: Json&lt;T&gt;,
+    id: usize,
+}</code></pre></div>
+<p>If a lifetime generic is present, it is replaced with <code>'r</code> in the
+generated implementation <code>impl FromForm&lt;'r&gt;</code>:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Generates `impl&lt;&#39;r&gt; FromForm&lt;&#39;r&gt; for MyWrapper&lt;&#39;r&gt;`.
+</span><span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>MyWrapper&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str);</code></pre></div>
+<p>Both type generics and one lifetime generic may be used:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>rocket::form::{<span class="self">self</span>, FromForm};
+
+<span class="comment">// The bound `form::Result&lt;&#39;r, T&gt;: FromForm&lt;&#39;r&gt;` will be required.
+</span><span class="attr">#[derive(FromForm)]
+</span><span class="kw">struct </span>SomeResult&lt;<span class="lifetime">&#39;o</span>, T&gt;(form::Result&lt;<span class="lifetime">&#39;o</span>, T&gt;);</code></pre></div>
+<p>The special bounds on <code>Json</code> and <code>Result</code> are required due to incomplete and
+incorrect support for lifetime generics in <code>async</code> blocks in Rust. See
+<a href="https://github.com/rust-lang/rust/issues/64552">rust-lang/#64552</a> for
+further details.</p>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="rocket_codegen" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (c18a5e8a5 2023-01-25)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-a43118d2dfb2799d.js" data-settings-css="settings-7c23ac01f615ce90.css" ></div></body></html>
