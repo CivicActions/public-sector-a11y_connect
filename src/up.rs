@@ -1,32 +1,40 @@
-use reqwest::Client;
-use rocket::response::status::Custom;
-use rocket::{post, State};
+extern crate reqwest;
+mod modname {
+    pub(crate) extern crate rocket;
+}
 
-#[post("/")]
-pub async fn up(bigquery_client: State<bigquery::BigqueryClient>) -> Custom<String> {
-    // Connect to BigQuery
-    bigquery_client.connect().await?;
+extern crate serde_json;
+extern crate tokio;
+use rocket;
+pub(crate) use rocket_contrib::json::Json;
+use serde_json::Value;
 
-    // Execute query
-    let results = bigquery_client
-        .query("SELECT name FROM ca-a11y.domains WHERE scan_active = true")
-        .await?;
-
-    // create a reqwest client
-    let client = Client::new();
-
-    // Iterate over the results and make a GET request to each name
-    for result in results {
-        let name = result.get("name").unwrap();
-        let response = client.get(name).send().await?;
-
-        // check if the response is successful
-        if response.status().is_success() {
-            println!("GET request to {} succeeded", name);
-        } else {
-            println!("GET request to {} failed", name);
+#[post("/up", data = "<data>")]
+pub(crate) async fn catch_up(data: Json<Value>) -> Result<String, String> {
+    let action = data
+        .get("action")
+        .unwrap_or_else(|| &Value::Null)
+        .as_str()
+        .unwrap_or("");
+    let url = data
+        .get("url")
+        .unwrap_or_else(|| &Value::Null)
+        .as_str()
+        .unwrap_or("");
+    if let "cycle" = action {
+        Ok("hello world".to_string())
+    } else {
+        let client = reqwest::Client::new();
+        match client.get(url).send().await {
+            Ok(response) => {
+                let status = response.status();
+                if status.is_success() {
+                    Ok(format!("url: {}, status: up", url))
+                } else {
+                    Ok(format!("url: {}, status: down", url))
+                }
+            }
+            Err(e) => Err(format!("Unable to reach the url: {} error: {:?}", url, e)),
         }
     }
-
-    Custom(200, "Begin scanning".to_string())
 }
