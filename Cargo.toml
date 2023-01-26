@@ -6,11 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rocket = "0.4.11"
+
 reqwest = "0.11.14"
 tokio = "1.24.2"
 gcp-bigquery-client = "0.16.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.91"
-rocket_contrib = "0.4.11"
+rocket = "0.5.0-rc.2"
+rocket_dyn_templates = "0.1.0-rc.2"
 

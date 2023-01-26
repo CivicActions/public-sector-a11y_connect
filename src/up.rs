@@ -5,8 +5,8 @@ mod modname {
 
 extern crate serde_json;
 extern crate tokio;
-use rocket;
-pub(crate) use rocket_contrib::json::Json;
+#[macro_use]
+extern crate rocket;
 use serde_json::Value;
 
 #[post("/up", data = "<data>")]
