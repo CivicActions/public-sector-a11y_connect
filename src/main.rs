@@ -3,14 +3,15 @@
 #[macro_use]
 extern crate rocket;
 
+pub mod bigquery;
 mod crawl;
 mod scan;
 mod up;
 
 fn main() {
     rocket::ignite()
-        .mount("/up", routes![up::up])
-        .mount("/scan", routes![scan::scan])
-        .mount("/crawl", routes![crawl::crawl])
+        .mount("/up", routes![up::catch_up])
+        .mount("/scan", routes![scan::catch_scan])
+        .mount("/crawl", routes![crawl::catch_crawl])
         .launch();
 }
