@@ -14,4 +14,4 @@ RUN cargo install --path .
 RUN cargo build --release
 
 # Set the command to run when the container starts
-CMD ["./target/release/rusty_a11y"]
+CMD ["./target/release/public-sector-a11y_connect"]
