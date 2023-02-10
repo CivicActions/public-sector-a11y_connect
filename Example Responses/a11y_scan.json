@@ -1,0 +1,50 @@
+{
+    "data": {
+        "domain": "accessibility.18f.gov",
+        "url": "https://accessibility.18f.gov",
+        "cdnConnected": false,
+        "pageLoadTime": {
+            "duration": 1499,
+            "durationFormated": "Standard",
+            "color": "#A5D6A7"
+        },
+        "lastScanDate": "2023-01-31T23:47:45.431Z",
+        "issues": [
+            {
+                "code": "WCAG2AA.Principle1.Guideline1_4.1_4_10.C32,C31,C33,C38,SCR34,G206",
+                "type": "warning",
+                "typeCode": 2,
+                "message": "This element has \"position: fixed\". This may require scrolling in two dimensions, which is considered a failure of this Success Criterion.",
+                "context": "<nav role=\"navigation\" class=\"usa-nav\">\n      <div class=\"usa-nav__inn...</nav>",
+                "selector": "html > body > header > nav",
+                "runner": "htmlcs",
+                "recurrence": 0
+            },
+            {
+                "code": "WCAG2AA.Principle1.Guideline1_4.1_4_10.C32,C31,C33,C38,SCR34,G206",
+                "type": "warning",
+                "typeCode": 2,
+                "message": "This element has \"position: fixed\". This may require scrolling in two dimensions, which is considered a failure of this Success Criterion.",
+                "context": "<div class=\"usa-overlay\"></div>",
+                "selector": "html > body > div:nth-child(6)",
+                "runner": "htmlcs",
+                "recurrence": 0
+            }
+        ],
+        "issuesInfo": {
+            "possibleIssuesFixedByCdn": 0,
+            "totalIssues": 2,
+            "issuesFixedByCdn": 0,
+            "errorCount": 0,
+            "warningCount": 2,
+            "noticeCount": 0,
+            "accessScore": 100,
+            "issueMeta": {
+                "skipContentIncluded": true
+            }
+        },
+        "online": true
+    },
+    "success": true,
+    "code": 200
+}

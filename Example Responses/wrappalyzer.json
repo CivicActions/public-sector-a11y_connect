@@ -1,0 +1,209 @@
+{
+    "urls": {
+        "https://www.navy.mil/": {
+            "status": 200,
+            "statusAfterRedirects": 200,
+            "urlAfterRedirects": "https://www.navy.mil/"
+        }
+    },
+    "applications": [
+        {
+            "name": "Bootstrap",
+            "confidence": "100",
+            "version": "4",
+            "icon": "Bootstrap.png",
+            "website": "https://getbootstrap.com",
+            "cpe": "cpe:/a:getbootstrap:bootstrap",
+            "categories": [
+                {
+                    "66": "UI frameworks"
+                }
+            ]
+        },
+        {
+            "name": "DNN",
+            "confidence": "100",
+            "version": "true",
+            "icon": "DNN.png",
+            "website": "http://dnnsoftware.com",
+            "cpe": "cpe:/a:dnnsoftware:dotnetnuke",
+            "categories": [
+                {
+                    "1": "CMS"
+                }
+            ]
+        },
+        {
+            "name": "FancyBox",
+            "confidence": "100",
+            "version": "3.5.7",
+            "icon": "FancyBox.png",
+            "website": "http://fancyapps.com/fancybox",
+            "cpe": null,
+            "categories": [
+                {
+                    "59": "JavaScript libraries"
+                }
+            ]
+        },
+        {
+            "name": "Google Analytics",
+            "confidence": "100",
+            "version": null,
+            "icon": "Google Analytics.svg",
+            "website": "http://google.com/analytics",
+            "cpe": null,
+            "categories": [
+                {
+                    "10": "Analytics"
+                }
+            ]
+        },
+        {
+            "name": "Google Font API",
+            "confidence": "100",
+            "version": null,
+            "icon": "Google Font API.png",
+            "website": "http://google.com/fonts",
+            "cpe": null,
+            "categories": [
+                {
+                    "17": "Font scripts"
+                }
+            ]
+        },
+        {
+            "name": "Matomo",
+            "confidence": "100",
+            "version": null,
+            "icon": "Matomo.png",
+            "website": "https://matomo.org",
+            "cpe": "cpe:/a:matomo:matomo",
+            "categories": [
+                {
+                    "10": "Analytics"
+                }
+            ]
+        },
+        {
+            "name": "MediaElement.js",
+            "confidence": "100",
+            "version": "4.2.9",
+            "icon": "MediaElement.js.png",
+            "website": "http://www.mediaelementjs.com",
+            "cpe": null,
+            "categories": [
+                {
+                    "14": "Video players"
+                }
+            ]
+        },
+        {
+            "name": "Microsoft ASP.NET",
+            "confidence": "100",
+            "version": null,
+            "icon": "Microsoft ASP.NET.png",
+            "website": "https://www.asp.net",
+            "cpe": "cpe:/a:microsoft:asp.net",
+            "categories": [
+                {
+                    "18": "Web frameworks"
+                }
+            ]
+        },
+        {
+            "name": "Slick",
+            "confidence": "100",
+            "version": "1.9.0",
+            "icon": "default.svg",
+            "website": "https://kenwheeler.github.io/slick",
+            "cpe": null,
+            "categories": [
+                {
+                    "59": "JavaScript libraries"
+                }
+            ]
+        },
+        {
+            "name": "jQuery",
+            "confidence": "100",
+            "version": "3.5.1",
+            "icon": "jQuery.svg",
+            "website": "https://jquery.com",
+            "cpe": "cpe:/a:jquery:jquery",
+            "categories": [
+                {
+                    "59": "JavaScript libraries"
+                }
+            ]
+        },
+        {
+            "name": "jQuery Migrate",
+            "confidence": "100",
+            "version": "3.0.0",
+            "icon": "jQuery.svg",
+            "website": "https://github.com/jquery/jquery-migrate",
+            "cpe": null,
+            "categories": [
+                {
+                    "59": "JavaScript libraries"
+                }
+            ]
+        },
+        {
+            "name": "jQuery UI",
+            "confidence": "100",
+            "version": "1.12.1",
+            "icon": "jQuery UI.svg",
+            "website": "http://jqueryui.com",
+            "cpe": "cpe:/a:jquery:jquery_ui",
+            "categories": [
+                {
+                    "59": "JavaScript libraries"
+                }
+            ]
+        },
+        {
+            "name": "prettyPhoto",
+            "confidence": "100",
+            "version": null,
+            "icon": "prettyPhoto.png",
+            "website": "http://no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/",
+            "cpe": null,
+            "categories": [
+                {
+                    "59": "JavaScript libraries"
+                }
+            ]
+        },
+        {
+            "name": "IIS",
+            "confidence": "0",
+            "version": null,
+            "icon": "IIS.png",
+            "website": "http://www.iis.net",
+            "cpe": "cpe:/a:microsoft:internet_information_server",
+            "categories": [
+                {
+                    "22": "Web servers"
+                }
+            ]
+        },
+        {
+            "name": "Windows Server",
+            "confidence": "0",
+            "version": null,
+            "icon": "WindowsServer.png",
+            "website": "http://microsoft.com/windowsserver",
+            "cpe": null,
+            "categories": [
+                {
+                    "28": "Operating systems"
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "language": "en-US"
+    }
+}
