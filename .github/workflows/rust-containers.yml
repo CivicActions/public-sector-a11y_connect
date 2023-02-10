@@ -32,7 +32,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4.3.0
         with:
-          images: ${{ env.REGISTRY }}/Rusty-A11y
+          images: ${{ env.REGISTRY }}/main
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3.3.0
