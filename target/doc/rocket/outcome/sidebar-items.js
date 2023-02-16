@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["Outcome","An enum representing success (`Success`), failure (`Failure`), or forwarding (`Forward`)."]],"macro":[["try_outcome","Unwraps a `Success` or propagates a `Forward` or `Failure`."]],"trait":[["IntoOutcome","Conversion trait from some type into an Outcome type."]]};

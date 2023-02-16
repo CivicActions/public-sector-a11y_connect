@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":[["header","Reexported Hyper HTTP header types."]]};

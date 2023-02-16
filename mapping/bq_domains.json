@@ -1,5 +1,6 @@
 {
-  "first_name": "data.title",
-  "last_name": "data.author",
-  "age": "data.age"
+  "name": "data.name",
+  "site_error": "data.error",
+  "scan_active": "data.active",
+  "domain": "data.url"
 }

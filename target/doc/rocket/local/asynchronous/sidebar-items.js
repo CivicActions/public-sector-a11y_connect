@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["Client","An `async` client to construct and dispatch local requests."],["LocalRequest","An `async` local request as returned by `Client`."],["LocalResponse","An `async` response from a dispatched `LocalRequest`."]]};

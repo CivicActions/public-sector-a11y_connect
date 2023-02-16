@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["ListOptions","A list of options to use with the table API handler."],["TableApi","A table API handler."]]};

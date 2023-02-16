@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["AuthorizedUserFlow","AuthorizedUserFlow can fetch oauth tokens using an authorized user secret."],["AuthorizedUserSecret","JSON schema of authorized user secret. You can obtain it by running on the client: `gcloud auth application-default login`."]]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["ModelDefinitionModelOptions","ModelDefinitionModelOptions : [Output-only, Beta] Model options used for the first training run. These options are immutable for subsequent training runs. Default values are used for any options not specified in the input query."]]};

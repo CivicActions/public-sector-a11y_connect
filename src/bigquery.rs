@@ -16,7 +16,7 @@ impl Iden for MyIden {
 }
 
 pub async fn read_up_targets(dataset_name: String) -> Result<Vec<String>, String> {
-    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_CLOUD_KEY")?)
+    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
         .await
         .map_err(|e| format!("{}", e))?;
     let mut result_set = client
@@ -43,7 +43,7 @@ pub async fn read_up_targets(dataset_name: String) -> Result<Vec<String>, String
 }
 
 pub async fn read_crawl_targets(dataset_name: String) -> Result<Vec<CrawlData>, String> {
-    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_CLOUD_KEY")?)
+    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
         .await
         .map_err(|e| format!("{}", e))?;
     let mut result_set = client
@@ -99,7 +99,7 @@ pub async fn store(
     table_name: String,
     object: &JsonValue,
 ) -> Result<(), String> {
-    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_CLOUD_KEY")?)
+    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
         .await
         .map_err(|e| format!("{}", e))?;
 
@@ -107,7 +107,6 @@ pub async fn store(
         sea_query::types::SeaRc::new(MyIden(dataset_name)),
         sea_query::types::SeaRc::new(MyIden(table_name)),
     );
-
     let mut columns_str = Vec::new();
     match object {
         JsonValue::Array(arr) => {
@@ -174,6 +173,7 @@ pub async fn store(
                 Some(serde_json::Value::String(s)) => {
                     sea_query::value::Value::String(Some(Box::new(s.to_owned())))
                 }
+                Some(serde_json::Value::Bool(b)) => sea_query::value::Value::Bool(Some(*b)),
                 _ => sea_query::value::Value::Bool(None),
             };
             v.push(sea_query::expr::SimpleExpr::Value(sql_entry));
@@ -186,22 +186,24 @@ pub async fn store(
     let columns = columns_str.iter().map(|c| MyIden(c.to_owned()));
 
     if !values.is_empty() {
-        let mut query = sea_query::Query::insert();
+        for chunk in values.chunks(64) {
+            let mut query = sea_query::Query::insert();
 
-        query.into_table(table);
-        query.columns(columns.clone());
+            query.into_table(table.clone());
+            query.columns(columns.clone());
 
-        for set in values.into_iter() {
-            query.values(set).unwrap();
+            for set in chunk.into_iter() {
+                query.values(set.into_iter().map(|i| i.clone())).unwrap();
+            }
+
+            let query = query.to_string(sea_query::backend::MysqlQueryBuilder);
+            let query = gcp_bigquery_client::model::query_request::QueryRequest::new(query);
+            client
+                .job()
+                .query(&get_env("GOOGLE_PROJECT_ID")?, query)
+                .await
+                .map_err(|e| format!("{}", e))?;
         }
-
-        let query = query.to_string(sea_query::backend::MysqlQueryBuilder);
-        let query = gcp_bigquery_client::model::query_request::QueryRequest::new(query);
-        client
-            .job()
-            .query(&get_env("GOOGLE_PROJECT_ID")?, query)
-            .await
-            .map_err(|e| format!("{}", e))?;
     }
     Ok(())
 }

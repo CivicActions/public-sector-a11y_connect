@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["Error",""],["Event",""],["FsEvent",""],["FsEventRefWrapper",""],["StreamFlags",""]],"type":[["Result",""]]};

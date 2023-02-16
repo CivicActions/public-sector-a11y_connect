@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["MissingPrefixBufError","The error returned when `BasePathBuf::try_new` is given a path without a prefix."],["MissingPrefixError","The error returned when `BasePath::try_new` is given a path without a prefix."],["ParentError","The error returned when `BasePath::parent` cannot remove the path’s last component."]]};

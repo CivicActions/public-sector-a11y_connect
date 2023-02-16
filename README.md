@@ -4,17 +4,25 @@ A collection of dockerized server-side applications using the Rocketweb Rust Fra
 
 The application is built using Rust's package manager cargo and it can be built and run using Docker. The provided Dockerfile creates a container that includes all of the dependencies, source code, and the built binary of the application. When the container is run, it starts the application and it would be able to connect to the BigQuery using the environment variable GOOGLE_CLOUD_KEY.
 
+## Getting Started
+
+## Docs
+
+The documentation can be found in the [docs](docs) folder.
+
+## Contributing
 
 ## GOALS OF PROGRAM
 
 We are deploying (another un-related project) the A11yWatch API to perform accessibility scans on websites.
 
 We want to streamline the process of sending requests to that API by utilizing an intermediary solution which
-1) Sends requests to the A11y API when requests are sent to this program
-2) Waits for the A11y API/other system to reply
-3) Apply out custom schema(s) to the reply data
-4) Record the result in Google BigQuery
-5) Respond to the requestor as needed
+
+1. Sends requests to the A11y API when requests are sent to this program
+2. Waits for the A11y API/other system to reply
+3. Apply out custom schema(s) to the reply data
+4. Record the result in Google BigQuery
+5. Respond to the requestor as needed
 
 Think of this as a pass-through API. We make calls to it and it forwards those to external services. Those external services respons, it re-maps the data, and handles accordingly.
 
@@ -22,36 +30,29 @@ The API/docs I've started are below, but here is an explination of what we are l
 
 **Variables for Docker Container**
 
-| Variable | Description | Example |
-| ---: | :---: | :---: |
-| A11Y_URL | URL of A11yWatch API | `https://api.a11ywatch.com/api/` |
-| GOOGLE_CLOUD_KEY | JSON Google Key | [Google Docs](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) |
-| GOOGLE_SERVICE_ACCOUNT | Account Name | `someThing@someNamespace.iam.gserviceaccount.com` |
-| GOOGLE_PROJECT_ID | project id for google big query
-| port_container | Port exposed by this application | 8080 |
-| port_host | Port Docker maps to the Container Port | 80 |
-| API_KEY | API key needed to access application. See Main.rs for notes | `CGPk5x72BIwcaWVV7RWs` |
-| A11Y_JWT | JWT needed to access `A11Y_URL` | |`
-| status_webhook | A webhook to send status updates | https://webhook.com |
+|               Variable |                         Description                         |                                         Example                                         |
+| ---------------------: | :---------------------------------------------------------: | :-------------------------------------------------------------------------------------: | --- |
+|               A11Y_URL |                    URL of A11yWatch API                     |                            `https://api.a11ywatch.com/api/`                             |
+| GOOGLE_APPLICATION_CREDENTIALS |                       JSON Google Key                       | [Google Docs](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) |
+| GOOGLE_SERVICE_ACCOUNT |                        Account Name                         |                    `someThing@someNamespace.iam.gserviceaccount.com`                    |
+|      GOOGLE_PROJECT_ID |               project id for google big query               |
+|         port_container |              Port exposed by this application               |                                          8080                                           |
+|              port_host |           Port Docker maps to the Container Port            |                                           80                                            |
+|                API_KEY | API key needed to access application. See Main.rs for notes |                                 `CGPk5x72BIwcaWVV7RWs`                                  |
+|               A11Y_JWT |               JWT needed to access `A11Y_URL`               |                                                                                         | `   |
+|         status_webhook |              A webhook to send status updates               |                                   https://webhook.com                                   |
 
-
+## Mapping Files
 
 ### Website Health Check
-  User sends POST request to
 
-
+User sends POST request to
 
 ### Accessibility Scan
 
-
 ### Accessibility Crawl
 
-
 ### Website Tech Inspect
-
-
-
-
 
 ## Quickstart
 
@@ -108,18 +109,9 @@ curl --request POST \
 
 - **Crawl Website** `/crawl`
 
-
-
-
-
-
 - **Scan Website** `/crawl`
 
-
 - **Inspect Website** `/inspect`
-
-
-
 
 ### System Status
 

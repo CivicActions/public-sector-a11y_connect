@@ -1,4 +1,0 @@
-(function() {var implementors = {
-"normpath":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/alloc/borrow/trait.ToOwned.html\" title=\"trait alloc::borrow::ToOwned\">ToOwned</a> for <a class=\"struct\" href=\"normpath/struct.BasePath.html\" title=\"struct normpath::BasePath\">BasePath</a>"]],
-"rocket_http":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/alloc/borrow/trait.ToOwned.html\" title=\"trait alloc::borrow::ToOwned\">ToOwned</a> for <a class=\"struct\" href=\"rocket_http/struct.RawStr.html\" title=\"struct rocket_http::RawStr\">RawStr</a>"]]
-};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

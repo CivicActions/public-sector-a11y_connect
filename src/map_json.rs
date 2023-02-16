@@ -104,8 +104,8 @@ impl JsonMapper {
                         }
                         match self.map_internal(&new_keys, mapping_value)? {
                             Some(Value::Object(output)) => {
-                                for (_, v) in output.iter() {
-                                    map.insert(mapped_name.to_owned(), v.clone());
+                                for (k, v) in output.iter() {
+                                    map.insert(k.to_owned(), v.clone());
                                 }
                             }
                             Some(Value::Array(outputs)) => {

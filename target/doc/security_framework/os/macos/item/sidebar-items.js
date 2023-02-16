@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"trait":[["ItemSearchOptionsExt","An extension trait adding OSX specific functionality to `ItemSearchOptions`."]]};

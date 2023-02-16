@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["CFRunLoopIsWaiting","Indicates whether the run loop is waiting for an event."]],"struct":[["FsEventWatcher","FSEvents-based `Watcher` implementation"]]};

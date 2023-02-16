@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["SecTransform","A type representing a transform."]]};

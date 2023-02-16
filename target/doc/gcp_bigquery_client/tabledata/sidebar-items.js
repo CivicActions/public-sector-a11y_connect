@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["ListQueryParameters",""],["TableDataApi","A table data API handler."]]};

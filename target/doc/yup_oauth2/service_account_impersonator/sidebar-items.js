@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["ServiceAccountImpersonationFlow","ServiceAccountImpersonationFlow uses user credentials to impersonate a service account."]]};

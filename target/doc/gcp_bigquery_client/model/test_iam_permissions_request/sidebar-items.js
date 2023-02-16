@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["TestIamPermissionsRequest","TestIamPermissionsRequest : Request message for `TestIamPermissions` method."]]};

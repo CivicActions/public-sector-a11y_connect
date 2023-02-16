@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["TableListView","TableListView : Additional details for a view."]]};

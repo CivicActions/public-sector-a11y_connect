@@ -1,0 +1,24 @@
+
+[global]
+secret_key = [randomly generated at launch]
+## limits = { forms = 32768 }
+## workers = [number of cpus * 2]
+keep_alive = 5
+read_timeout = 5
+write_timeout = 5
+
+[development]
+address = "0.0.0.0"
+port = 8000
+log = "debug"
+
+
+[staging]
+address = "0.0.0.0"
+port = 8000
+log = "normal"
+
+[production]
+address = "0.0.0.0"
+port = 8000
+log = "critical"

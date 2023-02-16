@@ -1,14 +1,16 @@
 use reqwest::Client;
-use rocket::{http::Status, post, response::status};
+use rocket::{http::Status, post, response::status, Data};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use serde_json::Value as JsonValue;
+use std::io::{BufReader, Read};
 use std::time::Duration;
 
 use crate::auth::ApiKey;
 use crate::bigquery::store as bq_store;
 use crate::get_env;
 use crate::map_json::JsonMapper;
+use crate::util::check_for_error;
 
 // Struct for holding the json body data
 #[derive(Serialize, Deserialize, Debug)]
@@ -17,22 +19,22 @@ struct ScanData {
     page_insights: bool,
 }
 
-#[post("/scan", data = "<data_str>")]
+#[post("/scan", data = "<raw_data>")]
 pub fn catch_scan(
-    data_str: String,
+    raw_data: Data,
     _key: ApiKey,
 ) -> Result<
     rocket::response::content::Json<String>,
     rocket::response::status::Custom<std::string::String>,
 > {
+    let data: ScanData = serde_json::from_reader(BufReader::new(raw_data.open().take(1024 * 1024)))
+        .map_err(|e| {
+            status::Custom(
+                Status::BadRequest,
+                format!("failed to parse body data: {}", e),
+            )
+        })?;
     let client = Client::new();
-
-    let data: ScanData = serde_json::from_str(&data_str).map_err(|e| {
-        status::Custom(
-            Status::BadRequest,
-            format!("failed to parse body data: {}", e),
-        )
-    })?;
 
     // Creating the json data for the request
     let json_data = json!({
@@ -77,6 +79,8 @@ pub fn catch_scan(
             format!("Error parsing response: {}", e),
         )
     })?;
+
+    check_for_error(&response)?;
 
     // apply json mappings and upload to google big query
     let mapper_bq_issues =

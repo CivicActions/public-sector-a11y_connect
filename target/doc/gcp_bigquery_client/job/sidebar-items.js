@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["JobApi","A job API handler."]]};

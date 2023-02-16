@@ -1,5 +1,5 @@
 [package]
-name = "rusty_a11y"
+name = "civic_rust"
 version = "0.1.0"
 edition = "2021"
 

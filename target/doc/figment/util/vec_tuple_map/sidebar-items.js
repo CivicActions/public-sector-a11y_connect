@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["deserialize","The deserializer half."],["serialize","The serializer half."]]};

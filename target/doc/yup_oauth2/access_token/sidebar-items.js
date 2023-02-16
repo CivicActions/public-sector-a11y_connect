@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["AccessTokenFlow","the flow for the access token authenticator"]]};

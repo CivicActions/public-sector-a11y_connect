@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["SecKeychainItem","A type representing a keychain item."]]};

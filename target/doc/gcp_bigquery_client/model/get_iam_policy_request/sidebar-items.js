@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["GetIamPolicyRequest","GetIamPolicyRequest : Request message for `GetIamPolicy` method."]]};

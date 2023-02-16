@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":[["mutex","Locks that have the same behaviour as a mutex."],["relax","Strategies that determine the behaviour of locks when encountering contention."]],"type":[["Mutex","A primitive that synchronizes the execution of multiple threads. See [`mutex::Mutex`] for documentation."]]};

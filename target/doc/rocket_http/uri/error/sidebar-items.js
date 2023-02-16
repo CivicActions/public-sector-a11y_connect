@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["PathError","An error interpreting a segment as a `PathBuf` component in `Segments::to_path_buf()`."]],"struct":[["Error","Error emitted on URI parse failure."],["TryFromUriError","The error type returned when a URI conversion fails."]]};

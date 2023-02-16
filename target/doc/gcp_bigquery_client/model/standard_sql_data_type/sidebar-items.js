@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["TypeKind","Required. The top level type of this field. Can be any standard SQL data type (e.g., “INT64”, “DATE”, “ARRAY”)."]],"struct":[["StandardSqlDataType",""]]};

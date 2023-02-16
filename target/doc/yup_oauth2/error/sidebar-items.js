@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":[["AuthErrorCode","The error code returned by the authorization server."],["Error","Encapsulates all possible results of the `token(...)` operation"]],"struct":[["AuthError","Error returned by the authorization server."]]};

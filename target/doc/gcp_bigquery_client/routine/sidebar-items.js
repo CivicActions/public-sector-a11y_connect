@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["ListOptions",""],["RoutineApi","A routine API handler."]]};
