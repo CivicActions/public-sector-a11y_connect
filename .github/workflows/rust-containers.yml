@@ -50,12 +50,12 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            API_KEY=Test123
-            GOOGLE_PROJECT_ID=${{ secrets.PROJECTID }}
-            GOOGLE_DATASET=YourDatasetName
-            A11Y_URL=${{ secrets.A11YURL }}
+            API_KEY=${{ secrets.API_KEY }}
+            GOOGLE_PROJECT_ID=${{ secrets.GOOGLE_PROJECT_ID }}
+            GOOGLE_DATASET=${{ secrets.GOOGLE_DATASET }}
+            A11Y_URL=${{ secrets.A11Y_URL }}
             A11Y_JWT=
-            GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLEAPPCREDS }}
+            GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
   # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images#publishing-images-to-github-packages
 
