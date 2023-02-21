@@ -188,6 +188,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "civic_rust"
+version = "0.1.0"
+dependencies = [
+ "gcp-bigquery-client",
+ "itertools",
+ "reqwest",
+ "rocket",
+ "sea-query",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "cookie"
 version = "0.11.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1210,20 +1224,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d194b56d58803a43635bdc398cd17e383d6f71f9182b9a192c127ca42494a59b"
 dependencies = [
  "base64 0.21.0",
-]
-
-[[package]]
-name = "rusty_connect"
-version = "0.1.0"
-dependencies = [
- "gcp-bigquery-client",
- "itertools",
- "reqwest",
- "rocket",
- "sea-query",
- "serde",
- "serde_json",
- "tokio",
 ]
 
 [[package]]

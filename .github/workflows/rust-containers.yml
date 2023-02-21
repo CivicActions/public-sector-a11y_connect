@@ -50,21 +50,21 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            API_KEY=${{ secrets.API_KEY }}
-            GOOGLE_PROJECT_ID=${{ secrets.GOOGLE_PROJECT_ID }}
-            GOOGLE_DATASET=${{ secrets.GOOGLE_DATASET }}
-            A11Y_URL=${{ secrets.A11Y_URL }}
+            API_KEY=API-Key-Here
+            GOOGLE_PROJECT_ID=Project-ID
+            GOOGLE_DATASET=GOOGLE_DATASET
+            A11Y_URL=A11Y_URL
             A11Y_JWT=
-            GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+            GOOGLE_APPLICATION_CREDENTIALS=GOOGLE_APPLICATION_CREDENTIALS_PATH
 
   # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images#publishing-images-to-github-packages
 
-#  deploy:
-#   name: Deploy to Namespace
-#  needs: build-and-publish
-# runs-on: self-hosted
-#steps:
-#      - uses: actions/checkout@v3
-#      - uses: azure/setup-kubectl@v3
-#      - name: Deploy
-#        run: kubectl apply --namespace=public-sector-a11y_connect -f k8s
+  deploy:
+    name: Deploy to Namespace
+    needs: build-and-publish
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - uses: azure/setup-kubectl@v3
+      - name: Deploy
+        run: kubectl apply --namespace=public-sector-a11y_connect -f k8s
