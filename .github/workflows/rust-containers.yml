@@ -58,13 +58,3 @@ jobs:
             GOOGLE_APPLICATION_CREDENTIALS=GOOGLE_APPLICATION_CREDENTIALS_PATH
 
   # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images#publishing-images-to-github-packages
-
-  deploy:
-    name: Deploy to Namespace
-    needs: build-and-publish
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v3
-      - uses: azure/setup-kubectl@v3
-      - name: Deploy
-        run: kubectl apply --namespace=public-sector-a11y_connect -f k8s
