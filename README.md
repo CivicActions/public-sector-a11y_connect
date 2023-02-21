@@ -1,5 +1,7 @@
 # Public Sector A11yWatch: Rusty-A11y
 
+[![Build and Publish Rust Containers](https://github.com/CivicActions/public-sector-a11y_connect/actions/workflows/rust-containers.yml/badge.svg)](https://github.com/CivicActions/public-sector-a11y_connect/actions/workflows/rust-containers.yml)
+
 A collection of dockerized server-side applications using the Rocketweb Rust Framework to connect CivicActions Gov accessibility scans to the A11yWatch API.
 
 The application is built using Rust's package manager cargo and it can be built and run using Docker. The provided Dockerfile creates a container that includes all of the dependencies, source code, and the built binary of the application. When the container is run, it starts the application and it would be able to connect to the BigQuery using the environment variable GOOGLE_CLOUD_KEY.
@@ -30,17 +32,17 @@ The API/docs I've started are below, but here is an explination of what we are l
 
 **Variables for Docker Container**
 
-|               Variable |                         Description                         |                                         Example                                         |
-| ---------------------: | :---------------------------------------------------------: | :-------------------------------------------------------------------------------------: | --- |
-|               A11Y_URL |                    URL of A11yWatch API                     |                            `https://api.a11ywatch.com/api/`                             |
+|                       Variable |                         Description                         |                                         Example                                         |
+| -----------------------------: | :---------------------------------------------------------: | :-------------------------------------------------------------------------------------: | --- |
+|                       A11Y_URL |                    URL of A11yWatch API                     |                            `https://api.a11ywatch.com/api/`                             |
 | GOOGLE_APPLICATION_CREDENTIALS |                       JSON Google Key                       | [Google Docs](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) |
-| GOOGLE_SERVICE_ACCOUNT |                        Account Name                         |                    `someThing@someNamespace.iam.gserviceaccount.com`                    |
-|      GOOGLE_PROJECT_ID |               project id for google big query               |
-|         port_container |              Port exposed by this application               |                                          8080                                           |
-|              port_host |           Port Docker maps to the Container Port            |                                           80                                            |
-|                API_KEY | API key needed to access application. See Main.rs for notes |                                 `CGPk5x72BIwcaWVV7RWs`                                  |
-|               A11Y_JWT |               JWT needed to access `A11Y_URL`               |                                                                                         | `   |
-|         status_webhook |              A webhook to send status updates               |                                   https://webhook.com                                   |
+|         GOOGLE_SERVICE_ACCOUNT |                        Account Name                         |                    `someThing@someNamespace.iam.gserviceaccount.com`                    |
+|              GOOGLE_PROJECT_ID |               project id for google big query               |
+|                 port_container |              Port exposed by this application               |                                          8080                                           |
+|                      port_host |           Port Docker maps to the Container Port            |                                           80                                            |
+|                        API_KEY | API key needed to access application. See Main.rs for notes |                                 `CGPk5x72BIwcaWVV7RWs`                                  |
+|                       A11Y_JWT |               JWT needed to access `A11Y_URL`               |                                                                                         | `   |
+|                 status_webhook |              A webhook to send status updates               |                                   https://webhook.com                                   |
 
 ## Mapping Files
 
