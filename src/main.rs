@@ -13,23 +13,15 @@ mod up;
 mod util;
 
 /*
-            Goal
-                I want to send HTTP requests to this endpoint and then forward the request to the applicable module
+Code Summary:
+The purpose of this module is to handle incoming HTTP requests and forward them to the appropriate sub-module. An API key is used for basic protection of the system, and requests without the correct key are rejected with "Not Authorized".
 
+API Key:
+The API key is set as the "api_key" Docker environment variable. The user must provide the correct key value in the "x-auth" field of the header in order to access the system.
 
-               API Key
-                    I want to provide basic protection for this system. The user will set api_key in the Docker envs to a string. That string is needed to access the system. If the key is not present, it replies with `Not Authorized`
-                    Key in Header
-                        `{"x-auth": "api_key"}`
-
-                    Sample Key  `CGPk5x72BIwcaWVV7RWs`
-
-                    Auth is handled before the request is forwarded to the module
-
-            Incoming requests explained in detail on appropriate module
-
-
-
+Function:
+- `get_env`: retrieves the value of a given environment variable or returns an error if the variable is missing.
+- `main`: configures and launches the Rocket application, mounting the routes for each sub-module.
 */
 
 pub fn get_env(name: &'static str) -> Result<String, String> {
@@ -37,12 +29,14 @@ pub fn get_env(name: &'static str) -> Result<String, String> {
 }
 
 fn main() {
+    // Configure Rocket with the specified environment settings
     let config = Config::build(Environment::Development)
-        .address("0.0.0.0")
-        .port(8000)
+        .address("0.0.0.0") // Listen on all network interfaces
+        .port(8000) // Listen on port 8000
         .finalize()
         .unwrap();
 
+    // Mount the routes for each module
     rocket::custom(config)
         .mount("/", routes![up::catch_up])
         .mount("/", routes![scan::catch_scan])

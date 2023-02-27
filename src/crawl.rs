@@ -14,6 +14,41 @@ use crate::get_env;
 use crate::map_json::JsonMapper;
 use crate::util::check_for_error;
 
+/*
+Code Summary
+
+This Rust code defines a Rocket endpoint and supporting functions for running a web accessibility audit on a given website URL. The endpoint is designed to handle two different actions: scan, which runs the accessibility audit on a single URL, and cycle, which runs the audit on a list of URLs stored in a Google BigQuery table. When the audit is complete, the data is mapped to the appropriate format and stored in BigQuery.
+
+
+Variables
+    CrawlData struct: defines the fields of the JSON body data for a single audit URL.
+
+    catch_crawl function: Rocket endpoint for the /crawl route. Handles the incoming HTTP request, checks the action, and calls run_crawl() with the given data.
+
+    run_crawl function: performs the web crawl by sending an HTTP POST request to an external API and handling the response. The data from the response is then mapped to the appropriate format and stored in BigQuery.
+
+Functions
+    check_for_error: checks the response data for any error messages and throws an error if any are found.
+
+    bq_store: stores the response data in a Google BigQuery table.
+
+Docker Vars
+    None
+
+Output
+    catch_crawl returns a JSON string with the response data from run_crawl.
+
+    run_crawl returns a Result<JsonValue, rocket::response::status::Custom<std::string::String>> with the mapped response data or an error message.
+
+Error Messages
+    - If an error occurs parsing the request body data, catch_crawl returns a BadRequest error message.
+    - If an error occurs sending the HTTP request or parsing the response data, run_crawl returns an InternalServerError error message.
+    - If an error occurs applying the JSON mappings, run_crawl returns an InternalServerError error message.
+    - If an error occurs storing the data in BigQuery, run_crawl returns an InternalServerError error message.
+    - If the response data contains any error messages, check_for_error throws an error.
+
+*/
+
 // Struct for holding the json body data
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CrawlData {
@@ -23,76 +58,8 @@ pub struct CrawlData {
     pub page_insights: bool,
 }
 
-/*
-This function handles requests to the /crawl endpoint.
-It takes in a target url and sends a post request to the `ally_url` endpoint with the appropriate json data. It then waits up to 10 minutes for a response, and sends that response back to the original request and saves result to BigQuery after mapping fields.
-
-User sends request to /crawl endpoint.
-
-A11y API Docs - who we send crawl requests to. The url we send requests to needs to be set via a docker env.
-https://a11ywatch.com/api-info
-
-| Input | Description | Example | Required | Location |
-| ---: | :---: | :---: | :---: | :---: |
-| action | To `scan` or `cycle` sites | action=cycle OR action=scan | Yes | URL Param |
-| 'target` | Domain | example.com | Only if `action=scan` | Body |
-| `sub` | BOOL if to scan subdomains | sub=true | Yes | URL Param |
-| `tld` | BOOL if to scan top level domains | tld=false | Yes | URL Param |
-| `page_insights` | Bool if to use Page Insights | page_insights=true | URL Param |
-
-**If action=scan**
-If action is scan, then the target from the request body is used as the crawl value below.
-
-        curl --location --request POST 'ally_url' --header 'Content-Type: application/json' -d '{
-            "url": "target",
-            "subdomains": true,
-            "tld": true,
-            "pageInsights": true
-        }'
-
-The results are mapped via the crawls.json file. mapping/crawls.json
-
-
-url string
-The url to crawl and gather reports.
-
-subdomains boolean
-Include subdomains that match domain.
-
-
-sitemap boolean
-Extend crawl with sitemap links.
-
-
-tld boolean
-Include all TLD extensions that match domain.
-
-
-pageInsights boolean
-Run with additional google lighthouse report. [Not required if configured]
-
-If subdomains & tld is enabled, the crawls can take a WHILE. As an example of what type of data we are waiting for, I've attached the full crawl of va.gov. It is not a small file and the a11y api took  minutes to complete it. Some sites take over 20 minutes to complete. I want to cut off crawls after 15 minutes.
-
-
-
-
-**If action=cycle**
-
-BigQuery will run a SQL query and return all the variables above. Those values are passed through to the crawl. When the crawl completes, the response is mapped to crawls.json and forwarded to the requester.
-
-Once forwarded, see the note below. All crawl results always get saved to BigQuery.
-
-
-
-**After any crarl completes**
-The results are always written to Google BigQuery. The crawl is recorded first. See the bq_crawls.json file for the fields we need mapped.
-
-The issues are then added to BigQuery. One row per issue. See bq_issues.json for the mapping.
-
-
-
-*/
-
+// The endpoint for the `catch_crawl` function is `/crawl` with the HTTP method POST.
+// It expects a JSON body containing the crawl data.
 #[post("/crawl", data = "<raw_data>")]
 pub fn catch_crawl(
     raw_data: Data,
@@ -101,6 +68,7 @@ pub fn catch_crawl(
     rocket::response::content::Json<String>,
     rocket::response::status::Custom<std::string::String>,
 > {
+    // Parse the JSON data from the request body into a Map
     let data: serde_json::Map<String, JsonValue> = serde_json::from_reader(BufReader::new(
         raw_data.open().take(1024 * 1024),
     ))
@@ -113,6 +81,7 @@ pub fn catch_crawl(
     let rt = tokio::runtime::Runtime::new().unwrap();
     match data.get("action").map(|v| v.as_str()).flatten() {
         Some("scan") => {
+            // If the action is `scan`, deserialize the JSON data into a CrawlData struct
             let data = CrawlData::deserialize(JsonValue::Object(data).into_deserializer())
                 .map_err(|e| {
                     status::Custom(
@@ -120,11 +89,14 @@ pub fn catch_crawl(
                         format!("failed to parse body data: {}", e),
                     )
                 })?;
+            // Run the crawl and return the response as a JSON string
             Ok(rocket::response::content::Json(
                 run_crawl(data)?.to_string(),
             ))
         }
         Some("cycle") => {
+            // If the action is `cycle`, fetch all crawl targets from Google BigQuery,
+            // run the crawl on each target, and return an array of responses as a JSON string
             let targets = rt
                 .block_on(bigquery::read_crawl_targets("rusty_a11y".to_owned()))
                 .map_err(|e| {
@@ -148,9 +120,11 @@ pub fn catch_crawl(
     }
 }
 
+// Sends the crawl data to an API and maps the response data before storing it in Google BigQuery
 fn run_crawl(
     data: CrawlData,
 ) -> Result<JsonValue, rocket::response::status::Custom<std::string::String>> {
+    // Create a new reqwest client for sending HTTP requests
     let client = Client::new();
     // Creating the json data for the request
     let json_data = json!({
@@ -159,6 +133,8 @@ fn run_crawl(
         "tld": data.tld,
         "pageInsights": data.page_insights,
     });
+
+    // Create a new tokio runtime so we can send an asynchronous request
     let rt = tokio::runtime::Runtime::new().unwrap();
     let _guard = rt.enter();
 
@@ -183,6 +159,7 @@ fn run_crawl(
                 .send(),
         )
         .map_err(|e| {
+            // If there was an error sending the request, return an internal server error with the error message
             status::Custom(
                 Status::InternalServerError,
                 format!("Error sending request: {}", e),
@@ -190,6 +167,7 @@ fn run_crawl(
         })?
         .json::<JsonValue>();
 
+    // If there was an error parsing the response, return an internal server error with the error message
     let response = rt.block_on(future).map_err(|e| {
         status::Custom(
             Status::InternalServerError,
@@ -197,9 +175,11 @@ fn run_crawl(
         )
     })?;
 
+    // Check if there was an error in the response and return an error if there was
     check_for_error(&response)?;
 
-    // apply json mappings and upload to google big query
+    // Apply json mappings and upload to google big query
+    // Load the mapping files for converting the JSON response to the format we need to store in BigQuery
     let mapper_bq_issues =
         JsonMapper::new(serde_json::from_str(include_str!("../mapping/bq_issues.json")).unwrap());
     let mapper_bq =
@@ -207,16 +187,20 @@ fn run_crawl(
     let mapper =
         JsonMapper::new(serde_json::from_str(include_str!("../mapping/crawls.json")).unwrap());
 
+    // Apply the mappings to the response JSON to get the format we need for the BigQuery tables
     let result_bq_issues = mapper_bq_issues.map(&response).map_err(|e| {
+        // If there was an error applying the mapping, return an internal server error with the error message
         status::Custom(
             Status::InternalServerError,
             format!("failed to map json data: {:?}", e),
         )
     })?;
+
+    // Store the data in the BigQuery table for issues
     rt.block_on(bq_store(
-        "rusty_a11y".to_owned(),
-        "issues".to_owned(),
-        &result_bq_issues,
+        "rusty_a11y".to_owned(), //BigQuery Dataset
+        "issues".to_owned(),     // BigQuery Table
+        &result_bq_issues,       // Data to be stored
     ))
     .map_err(|e| {
         status::Custom(
@@ -231,10 +215,12 @@ fn run_crawl(
             format!("failed to map json data: {:?}", e),
         )
     })?;
+
+    // Store the data in the BigQuery table for crawls
     rt.block_on(bq_store(
-        "rusty_a11y".to_owned(),
-        "crawls".to_owned(),
-        &result_bq,
+        "rusty_a11y".to_owned(), // BigQuery Dataset
+        "crawls".to_owned(),     // BigQuery Table
+        &result_bq,              // Data to be stored
     ))
     .map_err(|e| {
         status::Custom(
@@ -243,6 +229,7 @@ fn run_crawl(
         )
     })?;
 
+    // Return the mapped response data
     Ok(mapper.map(&response).map_err(|e| {
         status::Custom(
             Status::InternalServerError,

@@ -12,49 +12,66 @@ use serde_json::Value as JsonValue;
 use std::io::Read;
 
 /*
-        This module's purpose is to determine if a website is available or not.
+Code Summary:
+    This Rust code defines a single function catch_up to check the status of web pages. The function takes the input raw_data: Data and _key: ApiKey and returns a Result<String, rocket::response::status::Custom<std::string::String>> where the string is the parsed JSON data. This function parses the input JSON data to check the status of all targets in the list or the status of a specific target, using an HTTP client, and then stores this data in Google BigQuery.
 
-        User sends `POST` request to `/up` endpoint. If the body contains a value for `target`, then the application sends a `GET` request to the target. If it responds with success, such as a 200 code, then the test is a success. That is sent back to the requester in the following format in the body.
-        ```
-        {"target": "TestedURL", "status": "siteStatus" }
-        ```
+Variables:
+    raw_data :
+        An input variable of type Data which is provided to the function catch_up.
+    _key :
+        An ApiKey variable which is not used in this function.
+    buf :
+        A mutable vector buffer to read the data into.
+    data :
+        A map of string to JSON value that is either an empty map or is parsed from the buffer.
+    client :
+        An instance of reqwest::Client.
+    rt :
+        An instance of tokio::runtime::Runtime.
 
-        If the body of the incoming request is empty, then we want to do the below.
-        1) Reply with `Beginning Scan` in the body
-        2) Authenticate with Google Big Query (see bigquery.rs)
-        3) Perform SQL query for urls to test (see bigquery.rs)
-        4) Repeat below until all values from SQL query are exhausted
-            4a) Send GET request to url
-            4b) If success or error, perform SQL Query. I can write Query. (see bigquery.rs)
-                - We will update the `site_status` to either T or F, based on the result. We need the `site_status` variable available to a placeholder SQL query.
-            4c) Begin at 4a until URLs exhausted
+Functions:
+    catch_up :
+        This function takes input raw_data: Data and _key: ApiKey and returns a Result<String, rocket::response::status::Custom<std::string::String>> where the string is the parsed JSON data. The function first creates an empty buffer to read the data into, then opens the raw data and reads it into the buffer. It then checks the status of all targets in the list or the status of a specific target using an HTTP client and stores this data in Google BigQuery.
 
+Docker Vars:
+    None
 
+Output:
+    The output of the catch_up function is a Result<String, rocket::response::status::Custom<std::string::String>> where the string is the parsed JSON data.
 
+Errors:
+    failed to read body data: {} :
+        Indicates that the function failed to read the input data.
 
-| Input | Description | Example | Required | Location |
-| ---: | :---: | :---: | :---: | :---: |
-| 'target' | URL or domain to check | https://example.com/ or example.com | F | Body |
+    failed to parse body data: {} :
+        Indicates that the function failed to parse the input data.
 
+    target must be a string :
+        Indicates that the input target is not of the expected type string.
 
+    failed to store data to google big query: {} :
+        Indicates that the function failed to store the data in Google BigQuery.
 
-
-
-| Returns | Description | Example |
-| ---: | :---: | :---: |
-| `target` | Tested URL | https://example.com |
-| `status` | Status of target. `up` or `down` | `up` |
+    failed to read target list from google big query: {} :
+        Indicates that the function failed to read the target list from Google BigQuery.
 
 
 
 */
 
+// This function takes a Rocket Data object as input
+// It also takes an ApiKey that is currently unused
+// It returns a Result<String, Custom<String>> where the string is the parsed JSON data
 #[post("/up", data = "<raw_data>")]
 pub(crate) fn catch_up(
     raw_data: Data,
     _key: ApiKey,
 ) -> Result<String, rocket::response::status::Custom<std::string::String>> {
+    // Create an empty buffer to read the data into
     let mut buf = Vec::new();
+
+    // Open the raw data and read it into the buffer
+    // We limit the amount of data read to 1 MB
     raw_data
         .open()
         .take(1024 * 1024)
@@ -66,6 +83,8 @@ pub(crate) fn catch_up(
             )
         })?;
 
+    // If the buffer is empty, return an empty Map object
+    // Otherwise, parse the buffer as JSON
     let data: serde_json::Map<String, JsonValue> = if buf.is_empty() {
         serde_json::Map::new()
     } else {
@@ -76,9 +95,14 @@ pub(crate) fn catch_up(
             )
         })?
     };
+
+    // Create a new client to make HTTP requests
     let client = reqwest::Client::new();
+
+    // Create a new runtime to run async tasks
     let rt = tokio::runtime::Runtime::new().unwrap();
     if let Some(target) = data.get("target") {
+        // If a specific target is given, check its status
         let target = target.as_str().ok_or_else(|| {
             status::Custom(Status::BadRequest, "target must be a string".to_owned())
         })?;
@@ -90,6 +114,8 @@ pub(crate) fn catch_up(
             }
             _ => false,
         };
+
+        // Store target and status in BigQuery
         let data = serde_json::json!({"target": target, "status": status});
         rt.block_on(bq_store("rusty_a11y".to_owned(), "ups".to_owned(), &data))
             .map_err(|e| {
@@ -100,6 +126,7 @@ pub(crate) fn catch_up(
             })?;
         Ok(data.to_string())
     } else {
+        // If no specific target is given, check the status of all targets in the list
         let targets = rt
             .block_on(read_up_targets("rusty_a11y".to_owned()))
             .map_err(|e| {
@@ -110,6 +137,7 @@ pub(crate) fn catch_up(
             })?;
         let mut bq_json = Vec::new();
         for target in targets.into_iter() {
+            // Check the status of each target
             let status = match rt.block_on(client.get(target.clone()).send()) {
                 Ok(response)
                     if response.status().as_u16() >= 200 && response.status().as_u16() <= 399 =>
@@ -122,6 +150,8 @@ pub(crate) fn catch_up(
             bq_json.push(data);
         }
         let msg = format!("scanned {} target(s)", bq_json.len());
+
+        // Store target and status list in BigQuery
         rt.block_on(bq_store(
             "rusty_a11y".to_owned(),
             "ups".to_owned(),

@@ -8,6 +8,34 @@ use std::boxed::Box;
 
 use gcp_bigquery_client::Client;
 
+/*
+Code Summary:
+This module contains functions to retrieve data from and store data in Google BigQuery. The following functions are defined:
+
+read_up_targets: retrieves a list of URLs to be crawled from the up_targets table in the specified dataset
+read_crawl_targets: retrieves a list of crawl targets from the crawl_targets table in the specified dataset
+store: stores a JSON object in the specified table in the specified dataset in Google BigQuery
+
+
+API Key:
+The GOOGLE_APPLICATION_CREDENTIALS environment variable should be set to the path of a service account key file for a Google Cloud project.
+
+The GOOGLE_PROJECT_ID environment variable should be set to the ID of the Google Cloud project.
+
+
+// Implementation details:
+
+The read_up_targets function executes a query to retrieve a list of URLs to be crawled from the up_targets table in the specified dataset. The dataset_name parameter is the name of the dataset containing the table. The function returns a vector of strings representing the URLs.
+
+The read_crawl_targets function executes a query to retrieve a list of crawl targets from the crawl_targets table in the specified dataset. The dataset_name parameter is the name of the dataset containing the table. The function returns a vector of CrawlData structs representing the crawl targets.
+
+The store function stores a JSON object in the specified table in the specified dataset in Google BigQuery. The dataset_name parameter is the name of the dataset containing the table, the table_name parameter is the name of the table to store the data in, and the object parameter is a reference to a JSON object to store. The function returns Ok(()) if the operation was successful, and an error message as a string if the operation failed.
+
+The MyIden struct is an implementation of the Iden trait from the sea-query crate, which allows us to use custom identifiers when building SQL queries.
+
+The sea-query crate is used to construct SQL queries.
+*/
+
 struct MyIden(String);
 impl Iden for MyIden {
     fn unquoted(&self, s: &mut dyn std::fmt::Write) {
@@ -15,21 +43,28 @@ impl Iden for MyIden {
     }
 }
 
+// Retrieve a list of URLs to crawl
 pub async fn read_up_targets(dataset_name: String) -> Result<Vec<String>, String> {
-    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
+    // Create a client to communicate with Google BigQuery
+    let client = Client::from_service_account_key_file(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
         .await
         .map_err(|e| format!("{}", e))?;
+
+    // Query the `up_targets` table to retrieve URLs
     let mut result_set = client
         .job()
         .query(
             &get_env("GOOGLE_PROJECT_ID")?,
+            // Select URLs from up_targets where site_active is TRUE
             gcp_bigquery_client::model::query_request::QueryRequest::new(format!(
-                "SELECT * FROM {}.up_targets",
+                "SELECT * FROM {}.up_targets WHERE site_active = TRUE",
                 dataset_name
             )),
         )
         .await
         .map_err(|e| format!("{}", e))?;
+
+    // Collect the URLs into a vector
     let mut urls = Vec::new();
     while result_set.next_row() {
         if let Some(url) = result_set
@@ -42,10 +77,14 @@ pub async fn read_up_targets(dataset_name: String) -> Result<Vec<String>, String
     Ok(urls)
 }
 
+// Retrieve a list of crawl targets
 pub async fn read_crawl_targets(dataset_name: String) -> Result<Vec<CrawlData>, String> {
-    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
+    // Create a client to communicate with Google BigQuery
+    let client = Client::from_service_account_key_file(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
         .await
         .map_err(|e| format!("{}", e))?;
+
+    // Query the `crawl_targets` table to retrieve crawl targets
     let mut result_set = client
         .job()
         .query(
@@ -58,6 +97,7 @@ pub async fn read_crawl_targets(dataset_name: String) -> Result<Vec<CrawlData>, 
         .await
         .map_err(|e| format!("{}", e))?;
 
+    // Collect the crawl targets into a vector
     let mut datapoints = Vec::new();
     while result_set.next_row() {
         let url = result_set
@@ -72,6 +112,7 @@ pub async fn read_crawl_targets(dataset_name: String) -> Result<Vec<CrawlData>, 
         let page_insights = result_set
             .get_bool_by_name("page_insights")
             .map_err(|e| format!("invalid data from google big query, error: {}", e))?;
+
         if url.is_none() {
             continue;
         }
@@ -94,19 +135,24 @@ pub async fn read_crawl_targets(dataset_name: String) -> Result<Vec<CrawlData>, 
     Ok(datapoints)
 }
 
+// Store a JSON object in a BigQuery table
 pub async fn store(
     dataset_name: String,
     table_name: String,
     object: &JsonValue,
 ) -> Result<(), String> {
-    let client = Client::from_authorized_user_secret(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
+    // Create a client to communicate with Google BigQuery
+    let client = Client::from_service_account_key_file(&get_env("GOOGLE_APPLICATION_CREDENTIALS")?)
         .await
         .map_err(|e| format!("{}", e))?;
 
+    // Define the table we want to store the data in
     let table = sea_query::types::TableRef::SchemaTable(
         sea_query::types::SeaRc::new(MyIden(dataset_name)),
         sea_query::types::SeaRc::new(MyIden(table_name)),
     );
+
+    // Collect the names of the columns in the JSON object
     let mut columns_str = Vec::new();
     match object {
         JsonValue::Array(arr) => {
@@ -132,6 +178,7 @@ pub async fn store(
         _ => return Err("expected array or object for bigquery::store".to_owned()),
     }
 
+    // Collect the values of the columns in the JSON object
     let mut values_json = Vec::new();
     match object {
         JsonValue::Object(obj) => {
@@ -155,6 +202,7 @@ pub async fn store(
         _ => return Err("expected array or object for bigquery::store".to_owned()),
     }
 
+    // Convert the JSON values to SQL values
     let mut values = Vec::new();
     for json_entry_vec in values_json.into_iter() {
         let mut v = Vec::new();
@@ -183,6 +231,7 @@ pub async fn store(
         }
     }
 
+    // Define the columns in the table
     let columns = columns_str.iter().map(|c| MyIden(c.to_owned()));
 
     if !values.is_empty() {
