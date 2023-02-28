@@ -5,5 +5,9 @@
   "load_speed": "data.pageLoadTime.durationFormated",
   "load_time": "data.pageLoadTIme.duration",
   "success": "success",
-  "issues_total": "data.issuesInfo.totalIssues"
+  "issues_total": "data.issuesInfo.totalIssues",
+  "issues_error": "data.issuesInfo.errorCount",
+  "issues_warning": "data.issuesInfo.warningCount",
+  "issues_notice": "data.issuesInfo.noticeCount",
+  "access_score": "data.issuesInfo.accessScore"
 }
