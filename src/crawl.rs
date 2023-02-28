@@ -75,7 +75,7 @@ pub fn catch_crawl(
     .map_err(|e| {
         status::Custom(
             Status::BadRequest,
-            format!("failed to parse body data: {}", e),
+            format!("Request Error #2: Failed to parse body data: {}", e),
         )
     })?;
     let rt = tokio::runtime::Runtime::new().unwrap();
@@ -86,7 +86,7 @@ pub fn catch_crawl(
                 .map_err(|e| {
                     status::Custom(
                         Status::BadRequest,
-                        format!("failed to parse body data: {}", e),
+                        format!("Request Error #3: Failed to parse body data: {}", e),
                     )
                 })?;
             // Run the crawl and return the response as a JSON string
@@ -102,7 +102,7 @@ pub fn catch_crawl(
                 .map_err(|e| {
                     status::Custom(
                         Status::InternalServerError,
-                        format!("Error fetching crawl targets from google big query: {}", e),
+                        format!("Database Error #1: Error fetching crawl targets from google big query: {}", e),
                     )
                 })?;
             let mut responses = Vec::new();
@@ -115,7 +115,7 @@ pub fn catch_crawl(
         }
         Some(_) | None => Err(status::Custom(
             Status::BadRequest,
-            "action not specified or invalid".to_owned(),
+            "Request Error #4: Action not specified or invalid".to_owned(),
         )),
     }
 }
@@ -162,7 +162,7 @@ fn run_crawl(
             // If there was an error sending the request, return an internal server error with the error message
             status::Custom(
                 Status::InternalServerError,
-                format!("Error sending request: {}", e),
+                format!("Request Error #1: Problem sending request: {}", e),
             )
         })?
         .json::<JsonValue>();
@@ -171,7 +171,7 @@ fn run_crawl(
     let response = rt.block_on(future).map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("Error parsing response: {}", e),
+            format!("Response Error #1: Problem parsing response: {}", e),
         )
     })?;
 
@@ -192,7 +192,7 @@ fn run_crawl(
         // If there was an error applying the mapping, return an internal server error with the error message
         status::Custom(
             Status::InternalServerError,
-            format!("failed to map json data: {:?}", e),
+            format!("Mapping Error #1: Failed to map json data: {:?}", e),
         )
     })?;
 
@@ -205,14 +205,17 @@ fn run_crawl(
     .map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to store data to google big query: {}", e),
+            format!(
+                "Database Error #2: Failed to store data in Big Query: {}",
+                e
+            ),
         )
     })?;
 
     let result_bq = mapper_bq.map(&response).map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to map json data: {:?}", e),
+            format!("Mapping Error #2: Failed to map json data: {:?}", e),
         )
     })?;
 
@@ -225,7 +228,10 @@ fn run_crawl(
     .map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to store data to google big query: {}", e),
+            format!(
+                "Database Error #3: Failed to store data in Big Query: {}",
+                e
+            ),
         )
     })?;
 
@@ -233,7 +239,7 @@ fn run_crawl(
     Ok(mapper.map(&response).map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to map json data: {:?}", e),
+            format!("Mapping Error #3: Failed to map json data: {:?}", e),
         )
     })?)
 }

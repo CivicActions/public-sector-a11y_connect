@@ -158,7 +158,9 @@ pub async fn store(
             for o in arr.iter() {
                 for k in o
                     .as_object()
-                    .ok_or_else(|| "expected object for bigquery::store".to_owned())?
+                    .ok_or_else(|| {
+                        "Database Error #4: Schema - Expected object for bigquery::store".to_owned()
+                    })?
                     .keys()
                 {
                     if !columns_str.contains(k) {
@@ -174,7 +176,12 @@ pub async fn store(
                 }
             }
         }
-        _ => return Err("expected array or object for bigquery::store".to_owned()),
+        _ => {
+            return Err(
+                "Database Error #5: Schema - Expected array or object for bigquery::store"
+                    .to_owned(),
+            )
+        }
     }
 
     // Collect the values of the columns in the JSON object
@@ -198,7 +205,12 @@ pub async fn store(
                 values_json.push(cols);
             }
         }
-        _ => return Err("expected array or object for bigquery::store".to_owned()),
+        _ => {
+            return Err(
+                "Database Error #6: Schema - Expected array or object for bigquery::store"
+                    .to_owned(),
+            )
+        }
     }
 
     // Convert the JSON values to SQL values

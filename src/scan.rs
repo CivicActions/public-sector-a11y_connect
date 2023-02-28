@@ -134,7 +134,7 @@ pub fn catch_scan(
     let result_bq_issues = mapper_bq_issues.map(&response).map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to map json data: {:?}", e),
+            format!("Error: The scan module failed to map json data: {:?}", e),
         )
     })?;
     rt.block_on(bq_store(
@@ -145,7 +145,10 @@ pub fn catch_scan(
     .map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to store data to google big query: {}", e),
+            format!(
+                "Error: The scan module failed to store data in google big query: {}",
+                e
+            ),
         )
     })?;
 
@@ -153,7 +156,7 @@ pub fn catch_scan(
     let result_bq = mapper_bq.map(&response).map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to map json data: {:?}", e),
+            format!("Error: The scan module failed to map json data: {:?}", e),
         )
     })?;
     rt.block_on(bq_store(
@@ -164,7 +167,10 @@ pub fn catch_scan(
     .map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to store data to google big query: {}", e),
+            format!(
+                "Error: The scan module failed to store data in google big query: {}",
+                e
+            ),
         )
     })?;
 
@@ -172,7 +178,7 @@ pub fn catch_scan(
     let result = mapper.map(&response).map_err(|e| {
         status::Custom(
             Status::InternalServerError,
-            format!("failed to map json data: {:?}", e),
+            format!("Error: The scan module failed to map json data: {:?}", e),
         )
     })?;
 
