@@ -55,9 +55,8 @@ pub async fn read_up_targets(dataset_name: String) -> Result<Vec<String>, String
         .job()
         .query(
             &get_env("GOOGLE_PROJECT_ID")?,
-            // Select URLs from up_targets where site_active is TRUE
             gcp_bigquery_client::model::query_request::QueryRequest::new(format!(
-                "SELECT * FROM {}.up_targets WHERE site_active = TRUE",
+                "SELECT * FROM {}.up_targets",
                 dataset_name
             )),
         )

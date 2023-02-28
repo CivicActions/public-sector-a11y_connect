@@ -1,4 +1,4 @@
 {
-  "last_scan_date": "data.lastScanDate",
-  "url": "data.url"
+  "domain": "data.domain",
+  "issues_total": "data.issuesInfo.totalIssues"
 }

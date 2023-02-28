@@ -1,6 +1,15 @@
 {
   "issue_type": "data.issues.type",
   "message": "data.issues.message",
-  "url": "data.url"
+  "url": "data.url",
+  "domain": "data.domain",
+  "last_scan_at": "data.lastScanDate",
+  "issue_code": "data.issues.code",
+  "type": "data.issues.type",
+  "type_code": "data.issues.typeCode",
+  "context": "data.issues.context",
+  "selector": "data.issues.selector",
+  "runner": "data.issues.runner",
+  "recurrence": "data.issues.recurrence",
+  "online": "data.online"
 }
-
