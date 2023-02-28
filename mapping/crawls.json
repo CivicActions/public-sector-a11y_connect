@@ -1,4 +1,6 @@
 {
   "domain": "data.domain",
-  "issues_total": "data.issuesInfo.totalIssues"
+  "url": "data.url",
+  "issues_total": "data.issuesInfo.totalIssues",
+  "access_score": "data.issuesInfo.accessScore"
 }
