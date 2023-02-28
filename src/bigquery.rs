@@ -89,7 +89,7 @@ pub async fn read_crawl_targets(dataset_name: String) -> Result<Vec<CrawlData>, 
         .query(
             &get_env("GOOGLE_PROJECT_ID")?,
             gcp_bigquery_client::model::query_request::QueryRequest::new(format!(
-                "SELECT * FROM {}.crawl_targets",
+                "SELECT * FROM {}.crawl_targets WHERE active = TRUE",
                 dataset_name
             )),
         )
